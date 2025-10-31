@@ -1,69 +1,68 @@
-/**
- * Format date to readable string
- */
+import { POSTER_SIZES, BACKDROP_SIZES } from './constants'
+
+export const getImageUrl = (
+  path: string | null,
+  type: 'poster' | 'backdrop' = 'poster',
+  size: 'small' | 'medium' | 'large' = 'medium'
+): string => {
+  if (!path) {
+    return `https://via.placeholder.com/${type === 'poster' ? '342x513' : '1280x720'}?text=No+Image`
+  }
+
+  const baseUrl = type === 'poster' ? POSTER_SIZES : BACKDROP_SIZES
+  const sizeUrl = baseUrl[size.toUpperCase() as keyof typeof baseUrl]
+  return `${sizeUrl}${path}`
+}
+
 export const formatDate = (dateString: string): string => {
-  if (!dateString) return 'N/A';
-  
-  const date = new Date(dateString);
-  const options: Intl.DateTimeFormatOptions = { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
-  };
-  
-  return date.toLocaleDateString('es-ES', options);
-};
+  try {
+    const date = new Date(dateString)
+    return new Intl.DateTimeFormat('es-ES', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }).format(date)
+  } catch {
+    return dateString
+  }
+}
 
-/**
- * Format runtime in minutes to hours and minutes
- */
+export const formatRating = (rating: number): string => {
+  return (Math.round(rating * 10) / 10).toFixed(1)
+}
+
 export const formatRuntime = (minutes: number): string => {
-  if (!minutes) return 'N/A';
-  
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
-  
-  if (hours === 0) return `${mins}m`;
-  if (mins === 0) return `${hours}h`;
-  
-  return `${hours}h ${mins}m`;
-};
+  const hours = Math.floor(minutes / 60)
+  const mins = minutes % 60
+  return `${hours}h ${mins}m`
+}
 
-/**
- * Format number to compact notation (e.g., 1.2M, 5.3K)
- */
+export const truncateText = (text: string, maxLength: number): string => {
+  if (text.length <= maxLength) return text
+  return `${text.substring(0, maxLength)}...`
+}
+
 export const formatNumber = (num: number): string => {
-  if (!num) return '0';
+  if (!num) return '0'
   
   if (num >= 1_000_000) {
-    return `${(num / 1_000_000).toFixed(1)}M`;
+    return `${(num / 1_000_000).toFixed(1)}M`
   }
   
   if (num >= 1_000) {
-    return `${(num / 1_000).toFixed(1)}K`;
+    return `${(num / 1_000).toFixed(1)}K`
   }
   
-  return num.toString();
-};
+  return num.toString()
+}
 
-/**
- * Format vote average to one decimal
- */
-export const formatVoteAverage = (vote: number): string => {
-  if (!vote) return '0.0';
-  return vote.toFixed(1);
-};
-
-/**
- * Format currency (USD)
- */
 export const formatCurrency = (amount: number): string => {
-  if (!amount) return 'N/A';
+  if (!amount) return 'N/A'
   
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(amount);
-};
+  }).format(amount)
+}
