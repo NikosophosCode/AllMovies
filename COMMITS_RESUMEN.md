@@ -222,5 +222,325 @@
 
 ---
 
+---
+
+# 📊 Resumen de Commits - FASE 2
+
+## ✅ Commits Realizados (Fase 2)
+
+### 1. `a6dccad` - feat: agregar tipos e interfaces TypeScript
+**Descripción:** Implementación de type-safety completo con interfaces TypeScript
+
+**Cambios:**
+- ✅ `src/types/api.ts` - Tipos de respuestas API
+  - `APIResponse<T>` - Respuesta genérica
+  - `PaginatedResponse<T>` - Respuesta paginada
+  - `APIError` - Tipo de error
+
+- ✅ `src/types/movie.ts` - Interfaces de películas
+  - `Movie` - Interfaz completa de película
+  - `MovieListResponse` - Listado paginado
+  - `Video`, `Credits`, `Cast`, `Crew`, `Genre`
+  - `MovieFilter` - Filtros de búsqueda
+
+- ✅ `src/types/series.ts` - Interfaces de series/TV
+  - `Series` - Interfaz completa de serie
+  - `SeriesListResponse` - Listado paginado
+  - `Season`, `Episode`, `Network`
+  - `SeriesFilter` - Filtros de búsqueda
+  - Reutiliza tipos comunes de movies
+
+- ✅ `src/types/user.ts` - Tipos de usuario
+  - `User` - Datos de usuario
+  - `AuthSession` - Sesión de autenticación
+  - `Favorite` - Favorito guardado
+  - `WatchlistItem` - Elemento de watchlist
+  - `UserList` - Listas personalizadas
+
+- ✅ `src/types/theme.ts` - Tipos de tema
+  - `ThemeMode` - 'light' | 'dark' | 'auto'
+  - `Theme` - Configuración de tema
+  - `ThemeContextType` - Interface del contexto
+
+- ✅ `src/types/index.ts` - Exportación centralizada
+  - Barrel export de todos los tipos
+
+**Archivos creados:** 6
+**Líneas agregadas:** +229
+
+---
+
+### 2. `86bd116` - feat: implementar Context API para state management
+**Descripción:** Configuración de Context API para gestión de estado global
+
+**Cambios:**
+- ✅ `src/context/ThemeContext.tsx` - Contexto de tema
+  - Estado de tema persistido en localStorage
+  - Sincronización con DOM (document.documentElement)
+  - Métodos para cambiar modo y color
+  - Provider component con children
+
+- ✅ `src/context/AuthContext.tsx` - Contexto de autenticación
+  - Gestión de sesión y usuario
+  - login() y logout() callbacks
+  - Estado de loading
+  - Persistencia de sessionId
+
+- ✅ `src/context/MoviesContext.tsx` - Contexto de películas/series
+  - Gestión de favoritos
+  - Gestión de watchlist
+  - Persistencia en localStorage
+  - Métodos helper para consultar estado
+  - CRUD operations (add, remove)
+
+**Características:**
+- Todos incluyen validación de uso dentro del provider
+- TypeScript strict mode habilitado
+- Persistencia automática en localStorage
+- Callbacks useCallback para optimización
+
+**Archivos creados:** 3
+**Líneas agregadas:** +200
+
+---
+
+### 3. `3084bf2` - feat: crear custom hooks reutilizables
+**Descripción:** Implementación de 7 custom hooks para facilitar el acceso a funcionalidades
+
+**Cambios:**
+- ✅ `src/hooks/useTheme.ts` - Hook para tema
+  - Acceso a ThemeContext
+  - Validación de uso dentro de provider
+
+- ✅ `src/hooks/useAuth.ts` - Hook para autenticación
+  - Acceso a AuthContext
+  - Type-safe con AuthContextType
+
+- ✅ `src/hooks/useMovies.ts` - Hook para películas
+  - Acceso a MoviesContext
+  - Gestión de favoritos y watchlist
+
+- ✅ `src/hooks/useLocalStorage.ts` - Hook para localStorage
+  - Manejo seguro de localStorage
+  - Serialización/deserialización JSON
+  - Error handling
+
+- ✅ `src/hooks/useDebounce.ts` - Hook para debouncing
+  - Debouncing de cualquier valor
+  - Limpieza de timeouts
+
+- ✅ `src/hooks/useInfiniteScroll.ts` - Hook para infinite scroll
+  - IntersectionObserver API
+  - Referencia a elemento observado
+  - Configurable threshold
+
+- ✅ `src/hooks/index.ts` - Exportación centralizada
+  - Barrel export de todos los hooks
+
+**Archivos creados:** 7
+**Líneas agregadas:** +106
+
+---
+
+### 4. `a4e6a14` - feat: crear service layer con cliente HTTP
+**Descripción:** Implementación de la capa de servicios con cliente HTTP Axios
+
+**Cambios:**
+- ✅ `src/services/api/client.ts` - Cliente Axios configurado
+  - Interceptor de requests para agregar autenticación
+  - Soporte para Bearer token (prioritario)
+  - Fallback a API Key
+  - Interceptor de responses para errores 401
+  - Redirección a login en sesión expirada
+  - Timeout de 10 segundos
+
+- ✅ `src/services/api/endpoints.ts` - Endpoints de TMDB
+  - MOVIE_ENDPOINTS: now_playing, popular, top_rated, upcoming, trending, detail, credits, videos, recommendations
+  - TV_ENDPOINTS: popular, top_rated, on_the_air, trending, detail, season, episode, credits, videos, recommendations
+  - SEARCH_ENDPOINTS: multi, movie, tv, person
+  - GENRE_ENDPOINTS: movies, tv
+  - TRENDING_ENDPOINTS: movie_day, movie_week, tv_day, tv_week
+
+- ✅ `src/services/movies.ts` - Servicio de películas
+  - getNowPlaying(page)
+  - getPopular(page)
+  - getTopRated(page)
+  - getUpcoming(page)
+  - getTrending()
+  - getDetails(id)
+  - getCredits(id)
+  - getVideos(id)
+  - getRecommendations(id, page)
+
+- ✅ `src/services/search.ts` - Servicio de búsqueda
+  - multi(query, page)
+  - movies(query, page)
+  - tv(query, page)
+  - person(query, page)
+
+- ✅ `src/services/index.ts` - Exportación centralizada
+
+**Características:**
+- Lenguaje es-ES para respuestas
+- Type-safe con interfaces de types
+- Manejo automático de errores
+- Append responses para datos enriquecidos
+
+**Archivos creados:** 5
+**Líneas agregadas:** +198
+
+---
+
+### 5. `f8a30a1` - feat: actualizar utilidades para fase 2
+**Descripción:** Actualización de utilidades para soportar la arquitectura de FASE 2
+
+**Cambios:**
+- ✅ `src/utils/constants.ts` - Constantes actualizadas
+  - TMDB_IMAGE_BASE_URL y tamaños (POSTER_SIZES, BACKDROP_SIZES)
+  - GENRES: géneros de películas y series en español
+  - API_CONFIG: configuración de API
+  - APP_CONFIG: configuración de app
+  - PAGINATION: configuración de paginación
+  - STORAGE_KEYS: claves de localStorage
+  - THEME: constantes de tema
+  - ROUTES: rutas de la aplicación
+
+- ✅ `src/utils/formatters.ts` - Funciones de formato
+  - getImageUrl(path, type, size): generar URLs de imágenes con fallback
+  - formatDate(dateString): formato de fecha localizado (es-ES)
+  - formatRating(rating): formato de rating (1 decimal)
+  - formatRuntime(minutes): formato de duración (horas y minutos)
+  - truncateText(text, maxLength): truncar texto con ellipsis
+  - formatNumber(num): formato compacto (K, M)
+  - formatCurrency(amount): formato de moneda (USD)
+
+- ✅ `src/utils/helpers.ts` - Helpers reutilizables
+  - getYouTubeThumbnail(videoKey): URL de thumbnail
+  - getYouTubeUrl(videoKey): URL de video
+  - generateId(): ID aleatorio
+  - debounce<T>(): función debounce genérica
+  - isValidEmail(): validación de email
+  - getRoute(): generar rutas con parámetros
+
+- ✅ `src/utils/index.ts` - Exportación optimizada
+  - Exportación selectiva para evitar conflictos
+  - Exports de helpers separados para avoiding ambiguity
+
+**Archivos modificados:** 4
+**Líneas agregadas:** +145 | Líneas eliminadas:** -140
+
+---
+
+## 📊 Estadísticas FASE 2
+
+| Métrica | Valor |
+|---------|-------|
+| **Total de commits** | 5 |
+| **Archivos creados** | 21 |
+| **Archivos modificados** | 4 |
+| **Líneas agregadas** | ~850 |
+| **Líneas eliminadas** | ~140 |
+| **Total de archivos** | 25 |
+| **Líneas netas** | ~710 |
+
+---
+
+## 🏗️ Estructura Implementada en FASE 2
+
+```
+src/
+├── types/ (6 archivos) ✅
+│   ├── index.ts (barrel export)
+│   ├── api.ts (respuestas HTTP)
+│   ├── movie.ts (películas)
+│   ├── series.ts (series/TV)
+│   ├── user.ts (usuario)
+│   └── theme.ts (tema)
+│
+├── context/ (3 archivos) ✅
+│   ├── ThemeContext.tsx (tema dark/light)
+│   ├── AuthContext.tsx (autenticación)
+│   └── MoviesContext.tsx (favoritos/watchlist)
+│
+├── hooks/ (7 archivos) ✅
+│   ├── useTheme.ts
+│   ├── useAuth.ts
+│   ├── useMovies.ts
+│   ├── useLocalStorage.ts
+│   ├── useDebounce.ts
+│   ├── useInfiniteScroll.ts
+│   └── index.ts (barrel export)
+│
+├── services/ (5 archivos) ✅
+│   ├── api/
+│   │   ├── client.ts (Axios)
+│   │   └── endpoints.ts (TMDB endpoints)
+│   ├── movies.ts (servicio de películas)
+│   ├── search.ts (servicio de búsqueda)
+│   └── index.ts (barrel export)
+│
+└── utils/ (actualizado) ✅
+    ├── constants.ts (constantes y config)
+    ├── formatters.ts (formato de datos)
+    ├── helpers.ts (helpers generales)
+    ├── storage.ts (ya existía)
+    └── index.ts (exportación optimizada)
+```
+
+---
+
+## ✅ Verificación FASE 2
+
+- ✅ Compilación exitosa: `npm run build` ✓
+- ✅ Sin errores de TypeScript
+- ✅ Servidor de desarrollo funcionando
+- ✅ Todos los imports resueltos
+- ✅ Type-safety completo
+- ✅ No hay unused imports
+- ✅ Working tree clean
+
+---
+
+## 📤 Comandos Útiles
+
+Ver todos los commits de FASE 2:
+```bash
+git log --oneline a6dccad...f8a30a1
+```
+
+Ver diferencias de un commit:
+```bash
+git show a6dccad  # tipos
+git show 86bd116  # contextos
+git show 3084bf2  # hooks
+git show a4e6a14  # servicios
+git show f8a30a1  # utilidades
+```
+
+Ver cambios acumulados:
+```bash
+git diff 724024c...f8a30a1
+```
+
+---
+
+## 🎯 Resumen Fase 2
+
+**Estado:** ✅ COMPLETADA
+**Commits:** 5 commits específicos
+**Archivos:** 25 archivos (21 creados, 4 modificados)
+**Líneas:** ~850 líneas de código
+**Tiempo:** Completada
+
+**Características implementadas:**
+- ✅ Type-safety con TypeScript
+- ✅ Context API de 3 contextos
+- ✅ 7 Custom hooks
+- ✅ Service layer completo
+- ✅ HTTP client con interceptores
+- ✅ Utilidades de formateo y helpers
+
+---
+
 **Última actualización:** Octubre 31, 2025
-**Estado:** ✅ FASE 1 COMPLETADA CON COMMITS
+**Total de commits FASE 1 + FASE 2:** 13 commits
