@@ -5,6 +5,24 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>all-movies</title>
+    <script>
+      // Apply saved theme before the app and styles load to avoid flashes
+      (function() {
+        try {
+          const saved = localStorage.getItem('app-theme')
+          const pref = saved ? JSON.parse(saved) : { mode: 'light' }
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const dark = pref.mode === 'auto' ? prefersDark : pref.mode === 'dark'
+          if (dark) {
+            document.documentElement.classList.add('dark')
+            document.documentElement.style.colorScheme = 'dark'
+          } else {
+            document.documentElement.classList.remove('dark')
+            document.documentElement.style.colorScheme = 'light'
+          }
+        } catch (_) {}
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>
