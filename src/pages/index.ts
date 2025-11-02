@@ -1,0 +1,6 @@
+export { default as Home } from './Home'
+export { default as Movies } from './Movies'
+export { default as Series } from './Series'
+export { default as Search } from './Search'
+export { default as Trending } from './Trending'
+export { default as NotFound } from './NotFound'
