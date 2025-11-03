@@ -1,25 +1,44 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
 
-export const useInfiniteScroll = (callback: () => void, options: { threshold?: number } = {}) => {
-  const { threshold = 0.1 } = options
+export const useInfiniteScroll = (
+  callback: () => void,
+  options: { threshold?: number; rootMargin?: string } = {}
+) => {
+  const { threshold = 0.1, rootMargin = '100px' } = options
   const observerTarget = useRef<HTMLDivElement>(null)
+  const isLoadingRef = useRef(false)
+
+  // Estabilizar el callback con useCallback
+  const stableCallback = useCallback(() => {
+    if (!isLoadingRef.current) {
+      isLoadingRef.current = true
+      callback()
+      // Resetear después de un tiempo para permitir nuevas cargas
+      setTimeout(() => {
+        isLoadingRef.current = false
+      }, 1000)
+    }
+  }, [callback])
 
   useEffect(() => {
+    const target = observerTarget.current
+    if (!target) return
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          callback()
+          stableCallback()
         }
       },
-      { threshold }
+      { threshold, rootMargin }
     )
 
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current)
-    }
+    observer.observe(target)
 
-    return () => observer.disconnect()
-  }, [callback, threshold])
+    return () => {
+      observer.disconnect()
+    }
+  }, [stableCallback, threshold, rootMargin])
 
   return observerTarget
 }
