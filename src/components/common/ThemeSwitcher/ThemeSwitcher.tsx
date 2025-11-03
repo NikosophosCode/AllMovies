@@ -16,14 +16,14 @@ const ThemeSwitcher = () => {
   return (
     <button
       onClick={handleToggle}
-      className="p-2 hover:bg-white/10 dark:hover:bg-white/10 rounded-lg transition-colors"
+      className="p-2 rounded-lg transition-all duration-200 blur-button"
       title={`Theme: ${theme.mode}`}
       aria-label="Toggle theme"
     >
       {isDark ? (
-        <Moon size={20} className="text-slate-300" />
+        <Moon size={20} style={{ color: 'var(--fg-muted)' }} />
       ) : (
-        <Sun size={20} className="text-slate-700" />
+        <Sun size={20} style={{ color: 'var(--fg-muted)' }} />
       )}
     </button>
   )

@@ -11,12 +11,16 @@ const LoadingSpinner = ({ size = 'md', fullScreen = false }: LoadingSpinnerProps
   }[size]
 
   const content = (
-    <div className={`${sizeClass} border-4 border-slate-700 dark:border-slate-800 border-t-red-600 rounded-full animate-spin`} />
+    <div className="relative">
+      <div className={`${sizeClass} border-4 rounded-full animate-spin glow`} style={{ borderColor: 'var(--border)', borderTopColor: '#ef4444' }} />
+      {/* Efecto de brillo adicional */}
+      <div className={`${sizeClass} border-4 rounded-full animate-spin absolute inset-0 opacity-50 blur-sm`} style={{ borderColor: 'transparent', borderTopColor: '#ef4444' }} />
+    </div>
   )
 
   if (fullScreen) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-slate-950/90 backdrop-blur-sm z-50">
+      <div className="fixed inset-0 flex items-center justify-center blur-overlay z-50" style={{ backgroundColor: 'var(--overlay)' }}>
         {content}
       </div>
     )
