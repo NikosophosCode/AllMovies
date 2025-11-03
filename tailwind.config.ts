@@ -5,8 +5,8 @@ export default {
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}',
   ],
-  // Prefer class-based dark mode scoped to html.dark
-  darkMode: ['class', 'html.dark'],
+  // Class-based dark mode - applies when html element has 'dark' class
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
