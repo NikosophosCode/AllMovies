@@ -64,7 +64,9 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setTheme((prev) => ({ ...prev, primaryColor: color }))
   }
 
-  const isDark = theme.mode === 'dark'
+  // Determine effective dark state (take 'auto' into account)
+  const prefersDark = typeof window !== 'undefined' ? window.matchMedia('(prefers-color-scheme: dark)').matches : false
+  const isDark = theme.mode === 'dark' || (theme.mode === 'auto' && prefersDark)
 
   return (
     <ThemeContext.Provider value={{ theme, setThemeMode, setPrimaryColor, isDark }}>

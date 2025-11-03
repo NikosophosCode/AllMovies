@@ -1,7 +1,7 @@
 /* TailwindCSS v4 - Importación principal */
 @import "tailwindcss";
 
-/* Estilos base - CRÍTICO para que funcione el modo claro */
+/* Estilos base */
 html {
   scroll-behavior: smooth;
   height: 100%;
@@ -14,72 +14,87 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
-  /* Modo claro por defecto */
   background-color: rgb(255, 255, 255);
   color: rgb(15, 23, 42);
 }
 
-/* Modo oscuro - aplicado cuando html.dark existe */
 html.dark body {
   background-color: rgb(2, 6, 23);
   color: rgb(248, 250, 252);
 }
 
-/* Paleta por variables: controla el tema por clase html.dark y no depende de Tailwind */
+/* Paleta de variables CSS */
 :root {
-  --bg: #ffffff;              /* fondo base */
-  --fg: #0f172a;              /* texto base (slate-900) */
-  --fg-muted: #475569;        /* slate-600 */
-  --surface: #ffffff;         /* superficies (navbar, cards, etc.) */
-  --surface-muted: #f1f5f9;   /* superficies más claras */
-  --border: #e2e8f0;          /* slate-200 */
-  --link: #334155;            /* slate-700 */
-  --link-hover: #0f172a;      /* slate-900 */
-  --accent: #d32f2f;          /* rojo principal */
-  --card-bg: #f8fafc;         /* slate-50 */
-  --card-hover-bg: #eef2f7;   /* cerca de slate-100 */
+  --bg: #ffffff;
+  --fg: #0f172a;
+  --fg-muted: #475569;
+  --surface: #ffffff;
+  --surface-muted: #f1f5f9;
+  --border: #e2e8f0;
+  --link: #334155;
+  --link-hover: #0f172a;
+  --accent: #d32f2f;
+  --card-bg: #f8fafc;
+  --card-hover-bg: #eef2f7;
   --overlay: rgba(0,0,0,.5);
-  --chip-bg: #e2e8f0;         /* slate-200 */
-  --chip-fg: #334155;         /* slate-700 */
+  --chip-bg: #e2e8f0;
+  --chip-fg: #334155;
 }
 
 html.dark {
-  --bg: #020617;             /* slate-950 */
-  --fg: #f8fafc;             /* slate-50 */
-  --fg-muted: #94a3b8;       /* slate-400 */
-  --surface: #0f172b;        /* slate-900 aprox */
-  --surface-muted: #0f172a;  /* slate-900 base para secciones */
-  --border: #1f2937;         /* slate-800 */
-  --link: #cbd5e1;           /* slate-300 */
-  --link-hover: #ffffff;     /* blanco */
-  --accent: #ef4444;         /* red-500 */
-  --card-bg: #0f172a;        /* slate-900 */
-  --card-hover-bg: #1e293b;  /* slate-800 */
+  --bg: #020617;
+  --fg: #f8fafc;
+  --fg-muted: #94a3b8;
+  --surface: #0f172b;
+  --surface-muted: #0f172a;
+  --border: #1f2937;
+  --link: #cbd5e1;
+  --link-hover: #ffffff;
+  --accent: #ef4444;
+  --card-bg: #0f172a;
+  --card-hover-bg: #1e293b;
   --overlay: rgba(0,0,0,.7);
-  --chip-bg: #1f2937;        /* slate-800 */
-  --chip-fg: #cbd5e1;        /* slate-300 */
+  --chip-bg: #1f2937;
+  --chip-fg: #cbd5e1;
 }
 
-/* Mejoras de animación modernas */
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Animaciones optimizadas */
 @keyframes float {
-  0% { transform: translateY(0) }
-  50% { transform: translateY(-6px) }
-  100% { transform: translateY(0) }
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
+  0%, 100% { transform: translateY(0) }
+  50% { transform: translateY(-8px) }
 }
 
 @keyframes subtle-tilt {
-  0% { transform: rotate(0deg) }
-  50% { transform: rotate(0.3deg) }
-  100% { transform: rotate(0deg) }
+  0%, 100% { transform: rotate(0deg) }
+  50% { transform: rotate(0.5deg) }
 }
 
-.animate-tilt {
-  animation: subtle-tilt 6s ease-in-out infinite;
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
+
+@keyframes slide-in-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slide-in-down {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-float { animation: float 4s ease-in-out infinite; }
+.animate-tilt { animation: subtle-tilt 8s ease-in-out infinite; }
+.animate-fade-in { animation: fade-in 0.3s ease-in-out; }
+.animate-slide-in-up { animation: slide-in-up 0.3s ease-in-out; }
+.animate-slide-in-down { animation: slide-in-down 0.3s ease-in-out; }
 
 /* Parallax utility */
 .parallax-layer {
@@ -87,169 +102,141 @@ html.dark {
   transform: translate3d(0, 0, 0);
 }
 
-#root {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-html {
-  scroll-behavior: smooth;
-  height: 100%;
-}
-
-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  min-height: 100vh;
-}
-
-#root {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
 /* Scrollbar personalizada */
-::-webkit-scrollbar {
-  width: 10px;
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background-color: #f1f5f9; }
+::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background-color: #94a3b8; }
+
+html.dark ::-webkit-scrollbar-track { background-color: #1e293b; }
+html.dark ::-webkit-scrollbar-thumb { background-color: #475569; }
+html.dark ::-webkit-scrollbar-thumb:hover { background-color: #64748b; }
+
+/* Sistema de blur optimizado - Reducido para mejor rendimiento */
+
+/* Blur para navegación */
+.blur-nav {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
-::-webkit-scrollbar-track {
-  background-color: #f1f5f9;
+/* Blur para overlays (reducido) */
+.blur-overlay {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
-html.dark ::-webkit-scrollbar-track {
-  background-color: #1e293b;
+/* Glass morphism optimizado */
+.glass-morphism {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.1);
 }
 
-::-webkit-scrollbar-thumb {
-  background-color: #cbd5e1;
-  border-radius: 9999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: #94a3b8;
-}
-
-html.dark ::-webkit-scrollbar-thumb {
-  background-color: #475569;
-}
-
-html.dark ::-webkit-scrollbar-thumb:hover {
-  background-color: #64748b;
-}
-
-/* Custom Keyframes */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slide-in-up {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slide-in-down {
-  from {
-    transform: translateY(-20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-html {
-  scroll-behavior: smooth;
-  height: 100%;
-}
-
-body {
-  min-height: 100vh;
-  font-family: Inter, system-ui, -apple-system, sans-serif;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-#root {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Scrollbar personalizada */
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background-color: rgb(15 23 42);
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: rgb(71 85 105);
-  border-radius: 9999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(100 116 139);
-}
-
-/* Light mode scrollbar */
-html:not(.dark) ::-webkit-scrollbar-track {
-  background-color: rgb(241 245 249);
-}
-
-html:not(.dark) ::-webkit-scrollbar-thumb {
-  background-color: rgb(203 213 225);
-}
-
-html:not(.dark) ::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(148 163 184);
-}
-
-/* Utility classes for animations */
-.animate-fade-in {
-  animation: fade-in 0.3s ease-in-out;
-}
-
-.animate-slide-in-up {
-  animation: slide-in-up 0.3s ease-in-out;
-}
-
-.animate-slide-in-down {
-  animation: slide-in-down 0.3s ease-in-out;
-}
-
-/* Glass effect utility */
-.glass {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.glass-dark {
-  background: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+html.dark .glass-morphism {
+  background: rgba(15, 23, 42, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Glass card optimizada - SIN hover blur pesado */
+.glass-card {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 2px 8px 0 rgba(31, 38, 135, 0.08);
+  transition: all 0.3s ease;
+}
+
+html.dark .glass-card {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 4px 12px 0 rgba(31, 38, 135, 0.12);
+  transform: translateY(-2px);
+}
+
+html.dark .glass-card:hover {
+  background: rgba(15, 23, 42, 0.75);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Blur para botones */
+.blur-button {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.25s ease;
+}
+
+html.dark .blur-button {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.blur-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+html.dark .blur-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Frosted glass */
+.frosted {
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+html.dark .frosted {
+  background: rgba(15, 23, 42, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Glow effect reducido */
+.glow {
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+}
+
+html.dark .glow {
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+}
+
+.glow-hover {
+  transition: box-shadow 0.3s ease;
+}
+
+.glow-hover:hover {
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+}
+
+html.dark .glow-hover:hover {
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+}
+
+/* Logo theme switching - NO usar dark: de Tailwind */
+.logo-light {
+  display: block;
+}
+
+html.dark .logo-light {
+  display: none;
+}
+
+.logo-dark {
+  display: none;
+}
+
+html.dark .logo-dark {
+  display: block;
 }
 
