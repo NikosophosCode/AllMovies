@@ -2,6 +2,7 @@
 export * from './constants'
 export * from './formatters'
 export * from './storage'
+export * from './cache'
 
 // Export helpers separately to avoid conflicts
 export {
@@ -11,4 +12,6 @@ export {
   debounce,
   isValidEmail,
   getRoute,
+  removeDuplicatesById,
+  mergeUniqueById,
 } from './helpers'

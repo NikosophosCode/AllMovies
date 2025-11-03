@@ -57,3 +57,28 @@ export const getRoute = (route: string, params: Record<string, string | number>)
 
   return finalRoute
 }
+
+/**
+ * Remove duplicate items from array by ID
+ */
+export const removeDuplicatesById = <T extends { id: number | string }>(items: T[]): T[] => {
+  const seen = new Set<number | string>()
+  return items.filter((item) => {
+    if (seen.has(item.id)) {
+      return false
+    }
+    seen.add(item.id)
+    return true
+  })
+}
+
+/**
+ * Merge arrays removing duplicates by ID
+ */
+export const mergeUniqueById = <T extends { id: number | string }>(
+  existing: T[],
+  incoming: T[]
+): T[] => {
+  const merged = [...existing, ...incoming]
+  return removeDuplicatesById(merged)
+}
