@@ -1,3 +1,4 @@
 export { movieService } from './movies'
+export { seriesService } from './series'
 export { searchService } from './search'
-// Exportar más servicios conforme se creen
+export { genresService } from './genres'
