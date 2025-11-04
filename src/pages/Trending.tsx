@@ -1,8 +1,88 @@
+import { useState, useEffect } from 'react'
+import { TrendingUp } from 'lucide-react'
+import MovieCarousel from '@/components/movies/MovieCarousel'
+import LoadingSpinner from '@/components/common/LoadingSpinner'
+import { movieService, seriesService } from '@/services'
+import type { Movie, Series, PaginatedResponse } from '@/types'
+
 export default function Trending() {
+  const [timeWindow, setTimeWindow] = useState<'day' | 'week'>('day')
+  const [trendingMovies, setTrendingMovies] = useState<PaginatedResponse<Movie> | null>(null)
+  const [trendingSeries, setTrendingSeries] = useState<PaginatedResponse<Series> | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchTrending = async () => {
+      setLoading(true)
+      try {
+        const [movies, series] = await Promise.all([
+          movieService.getTrending(timeWindow),
+          seriesService.getTrending(timeWindow),
+        ])
+        setTrendingMovies(movies)
+        setTrendingSeries(series)
+      } catch (error) {
+        console.error('Error fetching trending:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchTrending()
+  }, [timeWindow])
+
   return (
-    <div className="text-center py-12">
-      <h1 className="text-3xl font-bold mb-4">Tendencias</h1>
-      <p className="text-slate-600 dark:text-slate-400">Página de tendencias en desarrollo...</p>
+    <div className="animate-fade-in">
+      {/* Header */}
+      <div className="m-12">
+        <div className="flex items-center gap-3 mb-4">
+          <TrendingUp size={32} className="text-primary-500" />
+          <h1 className="text-4xl md:text-5xl font-bold">En Tendencia</h1>
+        </div>
+        <p className="text-slate-600 dark:text-slate-400 text-lg">
+          Descubre qué está siendo tendencia en este momento
+        </p>
+      </div>
+
+      {/* Selector de período */}
+      <div className="flex gap-4 mb-8">
+        {(['day', 'week'] as const).map((period) => (
+          <button
+            key={period}
+            onClick={() => setTimeWindow(period)}
+            className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
+              timeWindow === period
+                ? 'bg-primary-500 text-white'
+                : 'bg-slate-100 dark:bg-slate-700 hover:bg-slate-200'
+            }`}
+          >
+            {period === 'day' ? 'Hoy' : 'Esta Semana'}
+          </button>
+        ))}
+      </div>
+
+      {loading ? (
+        <LoadingSpinner />
+      ) : (
+        <>
+          {trendingMovies?.results && (
+            <MovieCarousel
+              title="Películas en Tendencia"
+              movies={trendingMovies.results}
+              mediaType="movie"
+            />
+          )}
+
+          {trendingSeries?.results && (
+            <MovieCarousel
+              title="Series en Tendencia"
+              movies={trendingSeries.results}
+              mediaType="tv"
+            />
+          )}
+        </>
+      )}
     </div>
   )
 }
+
