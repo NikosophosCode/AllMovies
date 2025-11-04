@@ -36,10 +36,10 @@ export default function Trending() {
       {/* Header */}
       <div className="m-12">
         <div className="flex items-center gap-3 mb-4">
-          <TrendingUp size={32} className="text-primary-500" />
-          <h1 className="text-4xl md:text-5xl font-bold">En Tendencia</h1>
+          <TrendingUp size={32} style={{ color: 'var(--accent)' }} />
+          <h1 className="text-4xl md:text-5xl font-bold" style={{ color: 'var(--fg)' }}>En Tendencia</h1>
         </div>
-        <p className="text-slate-600 dark:text-slate-400 text-lg">
+        <p className="text-lg" style={{ color: 'var(--fg-muted)' }}>
           Descubre qué está siendo tendencia en este momento
         </p>
       </div>
@@ -50,11 +50,11 @@ export default function Trending() {
           <button
             key={period}
             onClick={() => setTimeWindow(period)}
-            className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
-              timeWindow === period
-                ? 'bg-primary-500 text-white'
-                : 'bg-slate-100 dark:bg-slate-700 hover:bg-slate-200'
-            }`}
+            className="px-6 py-2 rounded-lg font-semibold transition-colors"
+            style={{
+              backgroundColor: timeWindow === period ? 'var(--accent)' : 'var(--surface-muted)',
+              color: timeWindow === period ? 'white' : 'var(--fg)'
+            }}
           >
             {period === 'day' ? 'Hoy' : 'Esta Semana'}
           </button>
