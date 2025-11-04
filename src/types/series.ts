@@ -21,7 +21,9 @@ export interface Series {
   status?: string
   type?: string
   tagline?: string
-  videos?: Video[]
+  videos?: {
+    results: Video[]
+  }
   credits?: Credits
   recommendations?: PaginatedResponse<Series>
 }
