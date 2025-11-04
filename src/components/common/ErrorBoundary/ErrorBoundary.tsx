@@ -27,10 +27,10 @@ class ErrorBoundary extends React.Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-900">
+        <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--bg)' }}>
           <div className="text-center px-4">
-            <h1 className="text-4xl font-bold text-primary-500 mb-4">¡Oops!</h1>
-            <p className="text-lg text-slate-600 dark:text-slate-400 mb-6">
+            <h1 className="text-4xl font-bold mb-4" style={{ color: 'var(--accent)' }}>¡Oops!</h1>
+            <p className="text-lg mb-6" style={{ color: 'var(--fg-muted)' }}>
               Algo salió mal. Por favor, recarga la página.
             </p>
             <button
