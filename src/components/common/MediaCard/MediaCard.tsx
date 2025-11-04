@@ -1,0 +1,97 @@
+import { Heart, Star } from 'lucide-react'
+import type { Movie, Series } from '@/types'
+import { getImageUrl, formatRating } from '@/utils/formatters'
+import { useMovies } from '@/hooks'
+import { Link } from 'react-router-dom'
+
+interface MediaCardProps {
+  media: Movie | Series
+  mediaType?: 'movie' | 'tv'
+  onClick?: () => void
+}
+
+// Type guards
+const isMovie = (media: Movie | Series): media is Movie => {
+  return 'title' in media
+}
+
+const isSeries = (media: Movie | Series): media is Series => {
+  return 'name' in media
+}
+
+const MediaCard = ({ media, mediaType, onClick }: MediaCardProps) => {
+  // Auto-detectar el tipo si no se proporciona
+  const detectedType = mediaType || (isMovie(media) ? 'movie' : 'tv')
+  
+  const { isFavorite, addFavorite, removeFavorite } = useMovies()
+  const favorited = isFavorite(detectedType, media.id)
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (favorited) {
+      removeFavorite(detectedType, media.id)
+    } else {
+      addFavorite(detectedType, media.id)
+    }
+  }
+
+  const title = isMovie(media) ? media.title : media.name
+  const releaseDate = isMovie(media) ? media.release_date : media.first_air_date
+  const year = releaseDate ? new Date(releaseDate).getFullYear() : 'N/A'
+  const linkTo = detectedType === 'movie' ? `/movies/${media.id}` : `/series/${media.id}`
+
+  return (
+    <Link to={linkTo}>
+      <div
+        className="group cursor-pointer rounded-xl overflow-hidden glass-card transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-lg"
+        onClick={onClick}
+      >
+        {/* Imagen del poster */}
+        <div className="relative w-full rounded-xl aspect-2/3 overflow-hidden" style={{ backgroundColor: 'var(--surface-muted)' }}>
+          <img
+            src={getImageUrl(media.poster_path, 'poster', 'medium')}
+            alt={title}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            loading="lazy"
+          />
+          {/* Overlay optimizado - Menos saturado */}
+          <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <button
+              onClick={handleFavoriteClick}
+              className="absolute top-3 right-3 p-2.5 blur-button rounded-full hover:scale-110 transition-all duration-200"
+              aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
+            >
+              <Heart
+                size={18}
+                className={favorited ? 'fill-red-500 text-red-500' : 'text-white'}
+              />
+            </button>
+          </div>
+          
+          {/* Rating badge */}
+          <div className="absolute bottom-3 left-3 flex items-center gap-2 glass-morphism px-3 py-2 rounded-lg">
+            <Star size={14} className="fill-yellow-500 text-yellow-500 shrink-0" />
+            <span className="text-white text-xs font-semibold">{formatRating(media.vote_average)}</span>
+            {media.vote_count > 0 && (
+              <span className="text-xs opacity-70" style={{ color: 'var(--fg-muted)' }}>• {media.vote_count}</span>
+            )}
+          </div>
+        </div>
+
+        {/* Info */}
+        <div className="p-4 sm:p-5 space-y-2">
+          <h3 className="font-semibold text-sm line-clamp-1" style={{ color: 'var(--fg)' }}>{title}</h3>
+          <div className="flex items-center justify-between text-xs" style={{ color: 'var(--fg-muted)' }}>
+            <span>{year}</span>
+            {isSeries(media) && media.number_of_seasons && (
+              <span>{media.number_of_seasons} {media.number_of_seasons === 1 ? 'temp.' : 'temps.'}</span>
+            )}
+          </div>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
+export default MediaCard
