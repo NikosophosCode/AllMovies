@@ -1,0 +1,164 @@
+/* Rating Component - Estilos con variables CSS */
+
+.rating-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  position: absolute;
+}
+
+/* Tamaños */
+.rating-size-small .rating-star-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.rating-size-medium .rating-star-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.rating-size-large .rating-star-icon {
+  width: 32px;
+  height: 32px;
+}
+
+/* Botones individuales de estrellas */
+.rating-star {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.375rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+  color: var(--accent);
+}
+
+.rating-star:hover:not(:disabled) {
+  background-color: rgba(211, 47, 47, 0.1);
+  transform: scale(1.1);
+}
+
+.rating-star:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.rating-star:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+/* Icono estrella */
+.rating-star-icon {
+  transition: all 0.2s ease;
+}
+
+.rating-star-empty {
+  color: var(--fg-soft);
+  opacity: 0.5;
+}
+
+.rating-star-filled {
+  color: var(--accent);
+  opacity: 1;
+}
+
+/* Estados */
+.rating-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.rating-disabled .rating-star {
+  cursor: not-allowed;
+}
+
+.rating-disabled .rating-star:hover {
+  background-color: transparent;
+  transform: none;
+}
+
+.rating-readonly {
+  pointer-events: none;
+}
+
+.rating-readonly .rating-star {
+  cursor: default;
+}
+
+.rating-readonly .rating-star:hover {
+  background-color: transparent;
+  transform: none;
+}
+
+/* Display de calificación */
+.rating-display {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--accent);
+  padding-left: 0.5rem;
+  border-left: 1px solid var(--border);
+  margin-left: 0.5rem;
+  white-space: nowrap;
+}
+
+/* Animaciones */
+@media (prefers-reduced-motion: no-preference) {
+  .rating-star {
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .rating-star-icon {
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .rating-container {
+    gap: 0;
+    position: relative;
+  }
+
+  .rating-star {
+    padding: 0.25rem;
+  }
+
+  .rating-display {
+    font-size: 0.8125rem;
+  }
+}
+
+/* Accesibilidad - Soporte para usuario con preferencia de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  .rating-star,
+  .rating-star-icon {
+    transition: none;
+  }
+
+  .rating-star:hover:not(:disabled) {
+    transform: none;
+  }
+
+  .rating-star:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* Alto contraste */
+@media (prefers-contrast: more) {
+  .rating-star {
+    border: 1px solid var(--fg-muted);
+  }
+
+  .rating-star-empty {
+    opacity: 0.7;
+  }
+
+  .rating-star-filled {
+    opacity: 1;
+  }
+}
