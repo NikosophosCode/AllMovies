@@ -1,13 +1,14 @@
-import type { Movie } from '@/types'
-import MovieCard from '../MovieCard'
+import type { Movie, Series } from '@/types'
+import MediaCard from '@/components/common/MediaCard'
 
 interface MovieGridProps {
-  movies: Movie[]
+  movies: (Movie | Series)[]
+  mediaType?: 'movie' | 'tv'
   isLoading?: boolean
   onMovieClick?: (movieId: number) => void
 }
 
-const MovieGrid = ({ movies, isLoading, onMovieClick }: MovieGridProps) => {
+const MovieGrid = ({ movies, mediaType = 'movie', isLoading, onMovieClick }: MovieGridProps) => {
   if (isLoading) {
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
@@ -24,9 +25,10 @@ const MovieGrid = ({ movies, isLoading, onMovieClick }: MovieGridProps) => {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
       {movies.map((movie) => (
-        <MovieCard
+        <MediaCard
           key={movie.id}
-          movie={movie}
+          media={movie}
+          mediaType={mediaType}
           onClick={() => onMovieClick?.(movie.id)}
         />
       ))}
