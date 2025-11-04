@@ -13,6 +13,8 @@ const MovieDetail = lazy(() => import('@/pages/MovieDetail'))
 const SeriesDetail = lazy(() => import('@/pages/SeriesDetail'))
 const SeasonDetail = lazy(() => import('@/pages/SeasonDetail'))
 const Favorites = lazy(() => import('@/pages/Favorites'))
+const MyLists = lazy(() => import('@/pages/MyLists'))
+const AuthCallback = lazy(() => import('@/pages/AuthCallback'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
 const TailwindTest = lazy(() => import('@/pages/TailwindTest'))
 
@@ -71,6 +73,22 @@ export const AppRoutes = () => {
             element={
               <Suspense fallback={<Fallback />}>
                 <Favorites />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/my-lists"
+            element={
+              <Suspense fallback={<Fallback />}>
+                <MyLists />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/auth/callback"
+            element={
+              <Suspense fallback={<Fallback />}>
+                <AuthCallback />
               </Suspense>
             }
           />
