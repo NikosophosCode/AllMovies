@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
-import MovieGrid from '@/components/movies/MovieGrid'
+import MovieCarousel from '@/components/movies/MovieCarousel'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import SearchBar from '@/components/search/SearchBar'
 import type { Movie } from '@/types'
 import { movieService } from '@/services'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Parallax from '@/components/common/Parallax'
 import logo from '@/assets/icons/logo.png'
 import logoDark from '@/assets/icons/logo-dark.png'
@@ -23,8 +22,8 @@ const Home = () => {
           movieService.getUpcoming(),
           movieService.getTrending()
         ])
-        setComingSoonMovies(upcoming.results.slice(0, 8))
-        setTrendingMovies(trending.results.slice(0, 8))
+        setComingSoonMovies(upcoming.results.slice(0, 12))
+        setTrendingMovies(trending.results.slice(0, 12))
       } catch (err) {
         setError('Error loading movies')
         console.error(err)
@@ -37,7 +36,7 @@ const Home = () => {
   }, [])
 
   if (loading) return <LoadingSpinner fullScreen />
-  if (error) return <div className="text-center text-red-500 py-12">{error}</div>
+  if (error) return <div className="text-center py-12" style={{ color: 'var(--error-fg)' }}>{error}</div>
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--bg)' }}>
@@ -90,41 +89,21 @@ const Home = () => {
       </section>
 
       {/* Coming Soon Section */}
-      <section className="py-8 sm:py-12 max-w-[1920px] mx-auto">
-        <div className="flex items-center justify-between mb-6 sm:mb-8 px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3">
-            <div className="w-3 h-3 rounded-full bg-yellow-500 animate-pulse"></div>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold" style={{ color: 'var(--fg)' }}>Coming soon</h2>
-          </div>
-          <div className="flex gap-2 sm:gap-3">
-            <button className="p-2 sm:p-3 rounded-full blur-button transition-all duration-200 hover:scale-105">
-              <ChevronLeft size={20} style={{ color: 'var(--fg)' }} />
-            </button>
-            <button className="p-2 sm:p-3 rounded-full blur-button transition-all duration-200 hover:scale-105">
-              <ChevronRight size={20} style={{ color: 'var(--fg)' }} />
-            </button>
-          </div>
+      <section className="py-8 sm:py-12 max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-3 mb-6 sm:mb-8">
+          <div className="w-3 h-3 rounded-full bg-yellow-500 animate-pulse"></div>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold" style={{ color: 'var(--fg)' }}>Coming soon</h2>
         </div>
-        <MovieGrid movies={comingSoonMovies} />
+        <MovieCarousel movies={comingSoonMovies} mediaType="movie" title="" />
       </section>
 
       {/* Trending Movies Section */}
-      <section className="py-8 sm:py-12 max-w-[1920px] mx-auto">
-        <div className="flex items-center justify-between mb-6 sm:mb-8 px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3">
-            <div className="w-3 h-3 rounded-full bg-yellow-500 animate-pulse"></div>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold" style={{ color: 'var(--fg)' }}>Trending Movies</h2>
-          </div>
-          <div className="flex gap-2 sm:gap-3">
-            <button className="p-2 sm:p-3 rounded-full blur-button transition-all duration-200 hover:scale-105">
-              <ChevronLeft size={20} style={{ color: 'var(--fg)' }} />
-            </button>
-            <button className="p-2 sm:p-3 rounded-full blur-button transition-all duration-200 hover:scale-105">
-              <ChevronRight size={20} style={{ color: 'var(--fg)' }} />
-            </button>
-          </div>
+      <section className="py-8 sm:py-12 max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-3 mb-6 sm:mb-8">
+          <div className="w-3 h-3 rounded-full bg-yellow-500 animate-pulse"></div>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold" style={{ color: 'var(--fg)' }}>Trending Movies</h2>
         </div>
-        <MovieGrid movies={trendingMovies} />
+        <MovieCarousel movies={trendingMovies} mediaType="movie" title="" />
       </section>
     </div>
   )
