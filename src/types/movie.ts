@@ -19,7 +19,9 @@ export interface Movie {
   imdb_id?: string
   status?: string
   tagline?: string
-  videos?: Video[]
+  videos?: {
+    results: Video[]
+  }
   credits?: Credits
   recommendations?: PaginatedResponse<Movie>
 }
