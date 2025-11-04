@@ -70,11 +70,21 @@ const MediaCard = ({ media, mediaType, onClick }: MediaCardProps) => {
           </div>
           
           {/* Rating badge */}
-          <div className="absolute bottom-3 left-3 flex items-center gap-2 glass-morphism px-3 py-2 rounded-lg">
+          <div 
+            className="absolute bottom-3 left-3 flex items-center gap-2 px-3 py-2 rounded-lg backdrop-blur-sm"
+            style={{ 
+              backgroundColor: 'var(--rating-bg)',
+              border: '1px solid rgba(255, 255, 255, 0.1)'
+            }}
+          >
             <Star size={14} className="fill-yellow-500 text-yellow-500 shrink-0" />
-            <span className="text-white text-xs font-semibold">{formatRating(media.vote_average)}</span>
+            <span className="text-xs font-semibold" style={{ color: 'var(--rating-fg)' }}>
+              {formatRating(media.vote_average)}
+            </span>
             {media.vote_count > 0 && (
-              <span className="text-xs opacity-70" style={{ color: 'var(--fg-muted)' }}>• {media.vote_count}</span>
+              <span className="text-xs" style={{ color: 'var(--rating-muted)' }}>
+                • {media.vote_count}
+              </span>
             )}
           </div>
         </div>
