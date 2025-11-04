@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import MovieGrid from '@/components/movies/MovieGrid'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
+import SearchBar from '@/components/search/SearchBar'
 import type { Movie } from '@/types'
 import { movieService } from '@/services'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
@@ -65,7 +66,7 @@ const Home = () => {
         }
       >
         <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl glass-morphism rounded-2xl p-8 md:p-12">
+          <div className=" glass-morphism rounded-2xl p-8 md:p-12">
             <span className="inline-block text-red-600 font-semibold tracking-wider uppercase text-xs mb-3">Discover</span>
             <h1 className="animate-fade-in">
               {/* Light logo */}
@@ -80,6 +81,14 @@ const Home = () => {
           </div>
         </div>
       </Parallax>
+
+      {/* Search Bar Section */}
+      <section className=" max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto">
+          <SearchBar placeholder="Busca películas, series, personas..." />
+        </div>
+      </section>
+
       {/* Coming Soon Section */}
       <section className="py-8 sm:py-12 max-w-[1920px] mx-auto">
         <div className="flex items-center justify-between mb-6 sm:mb-8 px-4 sm:px-6 lg:px-8">
