@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { Heart } from 'lucide-react'
 import { useMovies } from '@/hooks'
-import MovieGrid from '@/components/movies/MovieGrid'
+import MediaCard from '@/components/common/MediaCard'
 import type { Movie, Series } from '@/types'
 import { movieService, seriesService } from '@/services'
 import { useAsync } from '@/hooks/useAsync'
@@ -9,6 +9,11 @@ import { useAsync } from '@/hooks/useAsync'
 interface FavoritesData {
   movies?: Movie[]
   tv?: Series[]
+}
+
+// Tipo para items con información de tipo de media
+type FavoriteItem = (Movie | Series) & {
+  _mediaType: 'movie' | 'tv'
 }
 
 export default function Favorites() {
@@ -33,14 +38,22 @@ export default function Favorites() {
   const filteredFavorites = useMemo(() => {
     if (!allData) return []
     
-    let items: (Movie | Series)[] = []
+    let items: FavoriteItem[] = []
 
     if (filter === 'all' || filter === 'movie') {
-      items = [...items, ...(allData.movies || [])]
+      const moviesWithType = (allData.movies || []).map(movie => ({
+        ...movie,
+        _mediaType: 'movie' as const
+      }))
+      items = [...items, ...moviesWithType]
     }
 
     if (filter === 'all' || filter === 'tv') {
-      items = [...items, ...(allData.tv || [])]
+      const tvWithType = (allData.tv || []).map(series => ({
+        ...series,
+        _mediaType: 'tv' as const
+      }))
+      items = [...items, ...tvWithType]
     }
 
     return items
@@ -49,14 +62,14 @@ export default function Favorites() {
   return (
     <div className="animate-fade-in">
       <div className="flex items-center gap-3 m-12">
-        <Heart size={32} className="text-primary-500" fill="currentColor" />
-        <h1 className="text-4xl font-bold">Mis Favoritos</h1>
+        <Heart size={32} style={{ color: 'var(--accent)' }} fill="currentColor" />
+        <h1 className="text-4xl font-bold" style={{ color: 'var(--fg)' }}>Mis Favoritos</h1>
       </div>
 
       {favorites.length === 0 ? (
         <div className="text-center py-24">
-          <Heart size={64} className="mx-auto text-slate-300 dark:text-slate-600 mb-4" />
-          <p className="text-xl text-slate-600 dark:text-slate-400">
+          <Heart size={64} className="mx-auto mb-4" style={{ color: 'var(--fg-soft)' }} />
+          <p className="text-xl" style={{ color: 'var(--fg-muted)' }}>
             Aún no tienes favoritos. ¡Comienza a añadir!
           </p>
         </div>
@@ -68,18 +81,27 @@ export default function Favorites() {
               <button
                 key={type}
                 onClick={() => setFilter(type)}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  filter === type
-                    ? 'bg-primary-500 text-white'
-                    : 'bg-slate-100 dark:bg-slate-700 hover:bg-slate-200'
-                }`}
+                className="px-4 py-2 rounded-lg font-medium transition-colors"
+                style={{
+                  backgroundColor: filter === type ? 'var(--accent)' : 'var(--surface-muted)',
+                  color: filter === type ? 'white' : 'var(--fg)'
+                }}
               >
                 {type === 'all' ? 'Todos' : type === 'movie' ? 'Películas' : 'Series'}
               </button>
             ))}
           </div>
 
-          <MovieGrid movies={filteredFavorites as Movie[]} />
+          {/* Grid de favoritos */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
+            {filteredFavorites.map((item) => (
+              <MediaCard
+                key={`${item._mediaType}-${item.id}`}
+                media={item as Movie | Series}
+                mediaType={item._mediaType}
+              />
+            ))}
+          </div>
         </>
       )}
     </div>

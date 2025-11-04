@@ -61,7 +61,7 @@ export default function Movies() {
   if (error && movies.length === 0) {
     return (
       <div className="text-center py-12">
-        <div className="text-red-500 dark:text-red-400 mb-4">{error}</div>
+        <div className="mb-4" style={{ color: 'var(--error-fg)' }}>{error}</div>
         <button
           onClick={() => {
             setCurrentPage(1)
@@ -70,7 +70,11 @@ export default function Movies() {
             loadedPages.current.clear()
             fetchMovies(1)
           }}
-          className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+          className="px-6 py-2 rounded-lg transition-colors"
+          style={{
+            backgroundColor: 'var(--accent)',
+            color: 'white'
+          }}
         >
           Reintentar
         </button>
@@ -81,16 +85,23 @@ export default function Movies() {
   return (
     <div className="animate-fade-in">
       <div className="m-12">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900 dark:text-white">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: 'var(--fg)' }}>
           Películas Populares
         </h1>
-        <p className="text-slate-600 dark:text-slate-400 text-lg">
+        <p className="text-lg" style={{ color: 'var(--fg-muted)' }}>
           Explora nuestro catálogo completo de películas más populares
         </p>
       </div>
 
       {error && movies.length > 0 && (
-        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-800 dark:text-red-300">
+        <div 
+          className="mb-6 p-4 border rounded-lg"
+          style={{
+            backgroundColor: 'var(--error-bg)',
+            borderColor: 'var(--error-border)',
+            color: 'var(--error-fg)'
+          }}
+        >
           {error}
         </div>
       )}
@@ -106,7 +117,7 @@ export default function Movies() {
       <div ref={observerTarget} className="py-8" />
 
       {!loading && movies.length > 0 && currentPage > totalPages && (
-        <div className="text-center py-8 text-slate-600 dark:text-slate-400">
+        <div className="text-center py-8" style={{ color: 'var(--fg-muted)' }}>
           <p className="text-lg font-medium">Has visto todas las películas disponibles</p>
           <p className="text-sm mt-2">Total: {movies.length} películas</p>
         </div>
