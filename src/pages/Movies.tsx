@@ -80,7 +80,7 @@ export default function Movies() {
 
   return (
     <div className="animate-fade-in">
-      <div className="mb-12">
+      <div className="m-12">
         <h1 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900 dark:text-white">
           Películas Populares
         </h1>
