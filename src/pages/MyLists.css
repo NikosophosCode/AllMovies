@@ -1,0 +1,249 @@
+/* MyLists.css - Estilos usando variables CSS */
+
+.my-lists-page {
+  padding: 1.5rem;
+}
+
+.my-lists-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.my-lists-create-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--accent);
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.my-lists-create-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+}
+
+.my-lists-create-btn:active {
+  transform: translateY(0);
+}
+
+/* Formulario */
+.my-lists-form {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  animation: slide-in-up 0.3s ease-out;
+}
+
+.my-lists-input,
+.my-lists-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 0.5rem;
+  color: var(--input-fg);
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease;
+  margin-bottom: 1rem;
+}
+
+.my-lists-input:focus,
+.my-lists-textarea:focus {
+  outline: none;
+  border-color: var(--input-border-focus);
+}
+
+.my-lists-input::placeholder,
+.my-lists-textarea::placeholder {
+  color: var(--input-placeholder);
+}
+
+.my-lists-textarea {
+  resize: vertical;
+  min-height: 6rem;
+  font-family: inherit;
+}
+
+.my-lists-submit-btn,
+.my-lists-cancel-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.my-lists-submit-btn {
+  background-color: var(--accent);
+  color: #ffffff;
+}
+
+.my-lists-submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+}
+
+.my-lists-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.my-lists-cancel-btn {
+  background-color: var(--surface-muted);
+  color: var(--fg);
+}
+
+.my-lists-cancel-btn:hover {
+  background-color: var(--border);
+}
+
+/* Grid de listas */
+.my-lists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Tarjeta de lista */
+.my-lists-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.my-lists-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  border-color: var(--accent);
+}
+
+.my-lists-card-poster {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--surface-muted), var(--border));
+}
+
+.my-lists-card-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.my-lists-card:hover .my-lists-card-poster img {
+  transform: scale(1.05);
+}
+
+.my-lists-card-content {
+  padding: 1.25rem;
+}
+
+.my-lists-card-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+}
+
+.my-lists-card-description {
+  font-size: 0.875rem;
+  color: var(--fg-muted);
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.my-lists-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.my-lists-card-count {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+
+.my-lists-delete-btn {
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--fg-muted);
+  cursor: pointer;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.my-lists-delete-btn:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--accent);
+  transform: scale(1.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .my-lists-page {
+    padding: 1rem;
+  }
+
+  .my-lists-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .my-lists-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .my-lists-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .my-lists-form {
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .my-lists-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1025px) {
+  .my-lists-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
