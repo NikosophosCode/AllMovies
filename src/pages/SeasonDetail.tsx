@@ -47,7 +47,8 @@ export default function SeasonDetail() {
       {/* Botón volver */}
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-2 m-6 text-primary-500 hover:text-primary-600 transition-colors"
+        className="flex items-center gap-2 m-6 transition-colors"
+        style={{ color: 'var(--accent)' }}
       >
         <ArrowLeft size={20} />
         Volver atrás
@@ -66,11 +67,11 @@ export default function SeasonDetail() {
 
         {/* Info */}
         <div className="md:col-span-3">
-          <p className="text-primary-500 font-semibold mb-2">{seriesName}</p>
-          <h1 className="text-4xl font-bold mb-4">{season.name}</h1>
+          <p className="font-semibold mb-2" style={{ color: 'var(--accent)' }}>{seriesName}</p>
+          <h1 className="text-4xl font-bold mb-4" style={{ color: 'var(--fg)' }}>{season.name}</h1>
           
           {season.air_date && (
-            <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400 mb-4">
+            <div className="flex items-center gap-2 mb-4" style={{ color: 'var(--fg-muted)' }}>
               <Calendar size={18} />
               <span>{formatDate(season.air_date)}</span>
               <span className="mx-2">•</span>
@@ -80,8 +81,8 @@ export default function SeasonDetail() {
 
           {season.overview && (
             <div className="mb-6">
-              <h3 className="text-xl font-bold mb-2">Sinopsis</h3>
-              <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+              <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--fg)' }}>Sinopsis</h3>
+              <p className="leading-relaxed" style={{ color: 'var(--fg-muted)' }}>
                 {season.overview}
               </p>
             </div>
@@ -91,11 +92,14 @@ export default function SeasonDetail() {
 
       {/* Episodios */}
       <div>
-        <h2 className="text-3xl font-bold mb-6">Episodios</h2>
+        <h2 className="text-3xl font-bold mb-6" style={{ color: 'var(--fg)' }}>Episodios</h2>
         
         {!season.episodes || season.episodes.length === 0 ? (
-          <div className="text-center py-12 bg-slate-100 dark:bg-slate-800 rounded-lg">
-            <p className="text-slate-600 dark:text-slate-400">
+          <div 
+            className="text-center py-12 rounded-lg"
+            style={{ backgroundColor: 'var(--surface-muted)' }}
+          >
+            <p style={{ color: 'var(--fg-muted)' }}>
               No hay información de episodios disponible
             </p>
           </div>
@@ -115,7 +119,10 @@ export default function SeasonDetail() {
                       className="w-full h-48 md:h-full object-cover"
                     />
                     <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity">
-                      <button className="bg-primary-500 hover:bg-primary-600 text-white rounded-full p-3 transition-colors">
+                      <button 
+                        className="rounded-full p-3 transition-colors text-white"
+                        style={{ backgroundColor: 'var(--accent)' }}
+                      >
                         <Play size={24} fill="currentColor" />
                       </button>
                     </div>
@@ -130,10 +137,10 @@ export default function SeasonDetail() {
                   <div className="md:col-span-3 p-4">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
-                        <h3 className="text-xl font-bold mb-1">
+                        <h3 className="text-xl font-bold mb-1" style={{ color: 'var(--fg)' }}>
                           {episode.episode_number}. {episode.name}
                         </h3>
-                        <div className="flex items-center gap-4 text-sm text-slate-600 dark:text-slate-400">
+                        <div className="flex items-center gap-4 text-sm" style={{ color: 'var(--fg-muted)' }}>
                           {episode.air_date && (
                             <div className="flex items-center gap-1">
                               <Calendar size={14} />
@@ -148,7 +155,10 @@ export default function SeasonDetail() {
 
                       {/* Rating */}
                       {episode.vote_average > 0 && (
-                        <div className="flex items-center gap-1 bg-primary-500 text-white px-3 py-1 rounded-lg ml-4">
+                        <div 
+                          className="flex items-center gap-1 text-white px-3 py-1 rounded-lg ml-4"
+                          style={{ backgroundColor: 'var(--accent)' }}
+                        >
                           <Star size={14} fill="currentColor" />
                           <span className="font-bold text-sm">
                             {formatRating(episode.vote_average)}
@@ -159,7 +169,7 @@ export default function SeasonDetail() {
 
                     {/* Descripción */}
                     {episode.overview && (
-                      <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-justify line-clamp-3">
+                      <p className="leading-relaxed text-justify line-clamp-3" style={{ color: 'var(--fg-muted)' }}>
                         {episode.overview}
                       </p>
                     )}
