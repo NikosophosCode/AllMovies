@@ -3,9 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Heart, Share2, Clock, Calendar, Star, Play } from 'lucide-react'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import ErrorMessage from '@/components/common/ErrorMessage'
+import Rating from '@/components/common/Rating'
+import Recommendations from '@/components/common/Recommendations'
+import TrailerModal from '@/components/movies/TrailerModal'
 import type { Movie, Video } from '@/types'
-import { movieService } from '@/services'
-import { useMovies } from '@/hooks'
+import { movieService, authService } from '@/services'
+import { useMovies, useAuth } from '@/hooks'
 import { getImageUrl, formatDate, formatRating, formatRuntime } from '@/utils/formatters'
 
 export default function MovieDetail() {
@@ -15,7 +18,10 @@ export default function MovieDetail() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedTrailer, setSelectedTrailer] = useState<Video | null>(null)
+  const [showTrailerModal, setShowTrailerModal] = useState(false)
+  const [userRating, setUserRating] = useState(0)
   const { isFavorite, addFavorite, removeFavorite } = useMovies()
+  const { isAuthenticated, sessionId } = useAuth()
 
   const movieId = Number(id)
   const favorited = isFavorite('movie', movieId)
@@ -51,6 +57,17 @@ export default function MovieDetail() {
     }
   }
 
+  const handleRating = async (rating: number) => {
+    if (!isAuthenticated || !sessionId) return
+    
+    try {
+      await authService.rateMovie(movieId, sessionId, rating)
+      setUserRating(rating)
+    } catch (err) {
+      console.error('Error al valorar película:', err)
+    }
+  }
+
   if (loading) return <LoadingSpinner fullScreen />
   if (error) return <ErrorMessage message={error} />
   if (!movie) return <ErrorMessage message="Película no encontrada" />
@@ -81,8 +98,10 @@ export default function MovieDetail() {
         <div className="absolute inset-0 flex items-center justify-center">
           {selectedTrailer && (
             <button 
-              className="rounded-full p-4 transition-colors text-white"
+              onClick={() => setShowTrailerModal(true)}
+              className="rounded-full p-4 transition-all duration-200 hover:scale-110 text-white"
               style={{ backgroundColor: 'var(--accent)' }}
+              aria-label="Play trailer"
             >
               <Play size={32} fill="currentColor" />
             </button>
@@ -124,6 +143,21 @@ export default function MovieDetail() {
                 <Share2 size={20} />
                 Compartir
               </button>
+
+              {/* Rating Component */}
+              {isAuthenticated && (
+                <div className="pt-3">
+                  <p className="text-sm font-semibold mb-2" style={{ color: 'var(--fg)' }}>
+                    Tu Valoración
+                  </p>
+                  <Rating
+                    initialRating={userRating}
+                    onRate={handleRating}
+                    size="large"
+                    maxRating={10}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -220,7 +254,7 @@ export default function MovieDetail() {
 
           {/* Reparto */}
           {movie.credits?.cast && movie.credits.cast.length > 0 && (
-            <div>
+            <div className="mb-8">
               <h3 className="text-2xl font-bold mb-4" style={{ color: 'var(--fg)' }}>Reparto Principal</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {movie.credits.cast.slice(0, 8).map((actor) => (
@@ -239,8 +273,25 @@ export default function MovieDetail() {
               </div>
             </div>
           )}
+
+          {/* Recomendaciones */}
+          <div>
+            <h3 className="text-2xl font-bold mb-4" style={{ color: 'var(--fg)' }}>Películas Similares</h3>
+            <Recommendations
+              mediaId={Number(id)}
+              mediaType="movie"
+              service={movieService}
+            />
+          </div>
         </div>
       </div>
+
+      {/* Trailer Modal */}
+      <TrailerModal
+        video={selectedTrailer}
+        isOpen={showTrailerModal}
+        onClose={() => setShowTrailerModal(false)}
+      />
     </div>
   )
 }
