@@ -43,12 +43,13 @@ const MovieCarousel = ({ title, movies, mediaType = 'movie', loading }: MovieCar
   if (loading) {
     return (
       <div className="mb-12">
-        <h2 className="text-2xl font-bold mb-6">{title}</h2>
+        <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--fg)' }}>{title}</h2>
         <div className="flex gap-4 overflow-hidden">
           {[...Array(6)].map((_, i) => (
             <div
               key={i}
-              className="shrink-0 w-48 h-72 bg-slate-200 dark:bg-slate-700 rounded-lg animate-pulse"
+              className="shrink-0 w-48 h-72 rounded-lg animate-pulse"
+              style={{ backgroundColor: 'var(--surface-muted)' }}
             />
           ))} 
         </div>
@@ -62,7 +63,7 @@ const MovieCarousel = ({ title, movies, mediaType = 'movie', loading }: MovieCar
 
   return (
     <div className="mb-12">
-      <h2 className="text-2xl font-bold mb-6 text-slate-900 dark:text-white">{title}</h2>
+      <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--fg)' }}>{title}</h2>
 
       <div className="relative group">
         {canScrollLeft && (

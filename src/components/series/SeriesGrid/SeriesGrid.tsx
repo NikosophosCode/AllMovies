@@ -9,7 +9,7 @@ const SeriesGrid = ({ series }: SeriesGridProps) => {
   if (!series || series.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-slate-600 dark:text-slate-400">No se encontraron series</p>
+        <p style={{ color: 'var(--fg-muted)' }}>No se encontraron series</p>
       </div>
     )
   }

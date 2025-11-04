@@ -15,7 +15,8 @@ const MovieGrid = ({ movies, mediaType = 'movie', isLoading, onMovieClick }: Mov
         {Array.from({ length: 12 }).map((_, index) => (
           <div
             key={index}
-            className="aspect-2/3 bg-slate-800 dark:bg-slate-900 rounded-xl animate-pulse"
+            className="aspect-2/3 rounded-xl animate-pulse"
+            style={{ backgroundColor: 'var(--surface-muted)' }}
           />
         ))}
       </div>
