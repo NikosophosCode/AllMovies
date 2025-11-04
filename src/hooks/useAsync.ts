@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 
 export interface AsyncState<T> {
   data: T | null
@@ -20,28 +20,38 @@ export const useAsync = <T,>(
 ): AsyncState<T> & { refetch: () => Promise<void> } => {
   const [state, setState] = useState<AsyncState<T>>({
     data: null,
-    loading: false,
+    loading: immediate,
     error: null,
   })
 
+  const asyncFunctionRef = useRef(asyncFunction)
+  const optionsRef = useRef(options)
+
+  // Actualizar refs cuando cambien
+  useEffect(() => {
+    asyncFunctionRef.current = asyncFunction
+    optionsRef.current = options
+  })
+
   const execute = useCallback(async () => {
-    setState({ data: null, loading: true, error: null })
+    setState((prev) => ({ ...prev, loading: true, error: null }))
     try {
-      const response = await asyncFunction()
+      const response = await asyncFunctionRef.current()
       setState({ data: response, loading: false, error: null })
-      options.onSuccess?.(response)
+      optionsRef.current.onSuccess?.(response)
     } catch (error) {
       const err = error instanceof Error ? error : new Error(String(error))
       setState({ data: null, loading: false, error: err })
-      options.onError?.(err)
+      optionsRef.current.onError?.(err)
     }
-  }, [asyncFunction, options])
+  }, [])
 
   useEffect(() => {
     if (immediate) {
       execute()
     }
-  }, [execute, immediate])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [immediate])
 
   return {
     ...state,
