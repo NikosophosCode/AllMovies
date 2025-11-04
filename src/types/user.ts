@@ -2,9 +2,13 @@ export interface User {
   id: number
   username: string
   name?: string
+  email?: string
   avatar?: {
     gravatar?: {
       hash: string
+    }
+    tmdb?: {
+      avatar_path: string | null
     }
   }
   iso_639_1?: string
