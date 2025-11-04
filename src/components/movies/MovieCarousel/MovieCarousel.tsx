@@ -1,15 +1,16 @@
 import { useEffect, useState, useRef } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import type { Movie } from '@/types'
-import MovieCard from '../MovieCard'
+import type { Movie, Series } from '@/types'
+import MediaCard from '@/components/common/MediaCard'
 
 interface MovieCarouselProps {
   title: string
-  movies: Movie[]
+  movies: Movie[] | Series[]
+  mediaType?: 'movie' | 'tv'
   loading?: boolean
 }
 
-const MovieCarousel = ({ title, movies, loading }: MovieCarouselProps) => {
+const MovieCarousel = ({ title, movies, mediaType = 'movie', loading }: MovieCarouselProps) => {
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(false)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
@@ -49,7 +50,7 @@ const MovieCarousel = ({ title, movies, loading }: MovieCarouselProps) => {
               key={i}
               className="shrink-0 w-48 h-72 bg-slate-200 dark:bg-slate-700 rounded-lg animate-pulse"
             />
-          ))}
+          ))} 
         </div>
       </div>
     )
@@ -85,7 +86,7 @@ const MovieCarousel = ({ title, movies, loading }: MovieCarouselProps) => {
         >
           {movies.map((movie) => (
             <div key={movie.id} className="shrink-0 w-48">
-              <MovieCard movie={movie} />
+              <MediaCard media={movie} mediaType={mediaType} />
             </div>
           ))}
         </div>
