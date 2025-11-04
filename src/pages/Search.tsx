@@ -91,13 +91,24 @@ export default function Search() {
       <div className="m-12">
         <form onSubmit={handleSearch} className="relative mb-6">
           <div className="relative">
-            <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={24} />
+            <SearchIcon 
+              className="absolute left-4 top-1/2 -translate-y-1/2" 
+              style={{ color: 'var(--input-placeholder)' }}
+              size={24} 
+            />
             <input
               type="text"
               placeholder="Busca películas y series..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 rounded-lg border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:outline-none focus:border-primary-500 transition-colors text-lg"
+              className="w-full pl-12 pr-4 py-3 rounded-lg border-2 focus:outline-none transition-colors text-lg"
+              style={{
+                backgroundColor: 'var(--input-bg)',
+                borderColor: 'var(--input-border)',
+                color: 'var(--input-fg)'
+              }}
+              onFocus={(e) => e.target.style.borderColor = 'var(--input-border-focus)'}
+              onBlur={(e) => e.target.style.borderColor = 'var(--input-border)'}
             />
           </div>
         </form>
@@ -106,7 +117,11 @@ export default function Search() {
         <div className="flex flex-wrap gap-3">
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors"
+            style={{
+              backgroundColor: 'var(--surface-muted)',
+              color: 'var(--fg)'
+            }}
           >
             <Filter size={18} />
             Filtros
@@ -117,11 +132,11 @@ export default function Search() {
               <button
                 key={type}
                 onClick={() => setMediaType(type)}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  mediaType === type
-                    ? 'bg-primary-500 text-white'
-                    : 'bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600'
-                }`}
+                className="px-4 py-2 rounded-lg font-medium transition-colors"
+                style={{
+                  backgroundColor: mediaType === type ? 'var(--accent)' : 'var(--surface-muted)',
+                  color: mediaType === type ? 'white' : 'var(--fg)'
+                }}
               >
                 {type === 'all' ? 'Todos' : type === 'movie' ? 'Películas' : 'Series'}
               </button>
@@ -132,29 +147,52 @@ export default function Search() {
 
       {/* Panel de filtros (expandible) */}
       {showFilters && (
-        <div className="mb-8 p-6 bg-slate-100 dark:bg-slate-800 rounded-lg animate-slide-in-up">
+        <div className="mb-8 p-6 rounded-lg animate-slide-in-up" style={{ backgroundColor: 'var(--surface-muted)' }}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-semibold mb-2">Año</label>
+              <label className="block text-sm font-semibold mb-2" style={{ color: 'var(--fg)' }}>Año</label>
               <input
                 type="number"
                 placeholder="2024"
-                className="w-full px-4 py-2 rounded-lg border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-50 focus:outline-none focus:border-primary-500 transition-colors"
+                className="w-full px-4 py-2 rounded-lg border-2 focus:outline-none transition-colors"
+                style={{
+                  backgroundColor: 'var(--input-bg)',
+                  borderColor: 'var(--input-border)',
+                  color: 'var(--input-fg)'
+                }}
+                onFocus={(e) => e.target.style.borderColor = 'var(--input-border-focus)'}
+                onBlur={(e) => e.target.style.borderColor = 'var(--input-border)'}
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold mb-2">Calificación mínima</label>
+              <label className="block text-sm font-semibold mb-2" style={{ color: 'var(--fg)' }}>Calificación mínima</label>
               <input
                 type="number"
                 min="0"
                 max="10"
                 placeholder="5"
-                className="w-full px-4 py-2 rounded-lg border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-50 focus:outline-none focus:border-primary-500 transition-colors"
+                className="w-full px-4 py-2 rounded-lg border-2 focus:outline-none transition-colors"
+                style={{
+                  backgroundColor: 'var(--input-bg)',
+                  borderColor: 'var(--input-border)',
+                  color: 'var(--input-fg)'
+                }}
+                onFocus={(e) => e.target.style.borderColor = 'var(--input-border-focus)'}
+                onBlur={(e) => e.target.style.borderColor = 'var(--input-border)'}
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold mb-2">Ordenar por</label>
-              <select className="w-full px-4 py-2 rounded-lg border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-50 focus:outline-none focus:border-primary-500 transition-colors">
+              <label className="block text-sm font-semibold mb-2" style={{ color: 'var(--fg)' }}>Ordenar por</label>
+              <select 
+                className="w-full px-4 py-2 rounded-lg border-2 focus:outline-none transition-colors"
+                style={{
+                  backgroundColor: 'var(--input-bg)',
+                  borderColor: 'var(--input-border)',
+                  color: 'var(--input-fg)'
+                }}
+                onFocus={(e) => e.target.style.borderColor = 'var(--input-border-focus)'}
+                onBlur={(e) => e.target.style.borderColor = 'var(--input-border)'}
+              >
                 <option>Relevancia</option>
                 <option>Más reciente</option>
                 <option>Mejor calificadas</option>
@@ -175,7 +213,7 @@ export default function Search() {
       {hasSearched && !loading && (
         <>
           <div className="mb-6">
-            <h2 className="text-2xl font-bold">
+            <h2 className="text-2xl font-bold" style={{ color: 'var(--fg)' }}>
               {results.length > 0
                 ? `${results.length} resultados encontrados`
                 : 'No se encontraron resultados'}
@@ -220,8 +258,8 @@ export default function Search() {
       {/* Estado inicial */}
       {!hasSearched && (
         <div className="text-center py-24">
-          <SearchIcon size={64} className="mx-auto text-slate-300 dark:text-slate-600 mb-4" />
-          <p className="text-xl text-slate-600 dark:text-slate-400">
+          <SearchIcon size={64} className="mx-auto mb-4" style={{ color: 'var(--fg-soft)' }} />
+          <p className="text-xl" style={{ color: 'var(--fg-muted)' }}>
             Comienza a escribir para buscar películas y series
           </p>
         </div>
