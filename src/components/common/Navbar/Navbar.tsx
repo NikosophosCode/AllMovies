@@ -11,11 +11,11 @@ const Navbar = () => {
   const location = useLocation()
 
   const links = [
-    { href: '/', label: 'Home' },
-    { href: '/tv-shows', label: 'TV Shows' },
-    { href: '/movies', label: 'Movies' },
-    { href: '/new-popular', label: 'New & Popular' },
-    { href: '/my-list', label: 'My list' },
+    { href: '/', label: 'Inicio' },
+    { href: '/movies', label: 'Películas' },
+    { href: '/series', label: 'Series' },
+    { href: '/trending', label: 'Tendencias' },
+    { href: '/search', label: 'Búsqueda' },
   ]
 
   const isActive = (href: string) => location.pathname === href
@@ -55,18 +55,20 @@ const Navbar = () => {
 
           {/* Controles de la derecha */}
           <div className="flex items-center gap-4">
-            <button 
-              className="p-2 rounded-lg transition-all duration-200 blur-button" 
+            <Link 
+              to="/search"
+              className="p-2 rounded-lg transition-all duration-200 blur-button hidden" 
               aria-label="Search"
             >
               <Search size={20} className="text-(--fg-muted)" />
-            </button>
-            <button 
+            </Link>
+            <Link 
+              to="/favorites"
               className="p-2 rounded-lg transition-all duration-200 blur-button"
               aria-label="Favorites"
             >
               <Heart size={20} className="text-(--fg-muted)" />
-            </button>
+            </Link>
             <ThemeSwitcher />
             <button 
               className="p-1 hover:opacity-80 transition-opacity duration-200"
