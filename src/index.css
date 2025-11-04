@@ -28,6 +28,7 @@ html.dark body {
   --bg: #ffffff;
   --fg: #0f172a;
   --fg-muted: #475569;
+  --fg-soft: #64748b;
   --surface: #ffffff;
   --surface-muted: #f1f5f9;
   --border: #e2e8f0;
@@ -39,12 +40,41 @@ html.dark body {
   --overlay: rgba(0,0,0,.5);
   --chip-bg: #e2e8f0;
   --chip-fg: #334155;
+  
+  /* Variables para inputs/search */
+  --input-bg: #ffffff;
+  --input-border: #cbd5e1;
+  --input-border-focus: #d32f2f;
+  --input-fg: #0f172a;
+  --input-placeholder: #94a3b8;
+  
+  /* Variables para estados */
+  --error-bg: #fee2e2;
+  --error-border: #fca5a5;
+  --error-fg: #991b1b;
+  --error-icon: #dc2626;
+  
+  --warning-bg: #fef3c7;
+  --warning-border: #fcd34d;
+  --warning-fg: #92400e;
+  --warning-icon: #f59e0b;
+  
+  --info-bg: #dbeafe;
+  --info-border: #93c5fd;
+  --info-fg: #1e40af;
+  --info-icon: #3b82f6;
+  
+  /* Variables para rating badge - mejor contraste en modo claro */
+  --rating-bg: rgba(30, 41, 59, 0.9);
+  --rating-fg: #ffffff;
+  --rating-muted: rgba(255, 255, 255, 0.75);
 }
 
 html.dark {
   --bg: #020617;
   --fg: #f8fafc;
   --fg-muted: #94a3b8;
+  --fg-soft: #cbd5e1;
   --surface: #0f172b;
   --surface-muted: #0f172a;
   --border: #1f2937;
@@ -56,6 +86,34 @@ html.dark {
   --overlay: rgba(0,0,0,.7);
   --chip-bg: #1f2937;
   --chip-fg: #cbd5e1;
+  
+  /* Variables para inputs/search */
+  --input-bg: #1e293b;
+  --input-border: #334155;
+  --input-border-focus: #ef4444;
+  --input-fg: #f8fafc;
+  --input-placeholder: #64748b;
+  
+  /* Variables para estados */
+  --error-bg: rgba(220, 38, 38, 0.15);
+  --error-border: rgba(220, 38, 38, 0.3);
+  --error-fg: #fca5a5;
+  --error-icon: #f87171;
+  
+  --warning-bg: rgba(245, 158, 11, 0.15);
+  --warning-border: rgba(245, 158, 11, 0.3);
+  --warning-fg: #fcd34d;
+  --warning-icon: #fbbf24;
+  
+  --info-bg: rgba(59, 130, 246, 0.15);
+  --info-border: rgba(59, 130, 246, 0.3);
+  --info-fg: #93c5fd;
+  --info-icon: #60a5fa;
+  
+  /* Variables para rating badge */
+  --rating-bg: rgba(30, 41, 59, 0.85);
+  --rating-fg: #ffffff;
+  --rating-muted: rgba(255, 255, 255, 0.7);
 }
 
 #root {
