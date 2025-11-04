@@ -55,7 +55,9 @@ const MovieCard = ({ movie, onClick }: MovieCardProps) => {
           <div className="absolute bottom-3 left-3 flex items-center gap-2 glass-morphism px-3 py-2 rounded-lg">
             <Star size={14} className="fill-yellow-500 text-yellow-500 shrink-0" />
             <span className="text-white text-xs font-semibold">{formatRating(movie.vote_average)}</span>
-            <span className="text-xs opacity-70" style={{ color: 'var(--fg-muted)' }}>• {movie.vote_count}</span>
+            {movie.vote_count > 0 && (
+              <span className="text-xs opacity-70" style={{ color: 'var(--fg-muted)' }}>• {movie.vote_count}</span>
+            )}
           </div>
         </div>
 
