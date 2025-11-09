@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Tv } from 'lucide-react'
 import { SeriesGrid } from '@/components/series'
-import { LoadingSpinner } from '@/components/common'
-import { useInfiniteScroll } from '@/hooks'
+import { LoadingSpinner, AdvancedFilters } from '@/components/common'
+import type { FilterState } from '@/components/common'
+import { useInfiniteScroll, useFilters } from '@/hooks'
 import type { Series } from '@/types'
 import { seriesService } from '@/services'
 import { mergeUniqueById } from '@/utils'
@@ -14,6 +15,7 @@ export default function Series() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'popular' | 'top_rated' | 'on_the_air'>('popular')
+  const { filters, setFilters } = useFilters('tv')
   const loadedPages = useRef(new Map<string, Set<number>>())
 
   // Inicializar conjuntos para cada tab si no existen
@@ -24,7 +26,7 @@ export default function Series() {
     return loadedPages.current.get(tab)!
   }
 
-  const fetchSeries = async (page: number, tab: typeof activeTab) => {
+  const fetchSeries = async (page: number, tab: typeof activeTab, currentFilters: FilterState) => {
     const tabPages = getLoadedPagesForTab(tab)
     
     // Evitar cargar la misma página dos veces
@@ -36,17 +38,28 @@ export default function Series() {
       setLoading(true)
       tabPages.add(page)
       
+      // Usar filtros si están activos
+      const hasFilters = currentFilters.genres.length > 0 || currentFilters.year !== '' || currentFilters.sortBy !== 'popularity.desc'
+      
       let response
-      switch (tab) {
-        case 'popular':
-          response = await seriesService.getPopular(page)
-          break
-        case 'top_rated':
-          response = await seriesService.getTopRated(page)
-          break
-        case 'on_the_air':
-          response = await seriesService.getOnTheAir(page)
-          break
+      if (hasFilters) {
+        response = await seriesService.searchByFilters({
+          genres: currentFilters.genres,
+          year: currentFilters.year ? Number(currentFilters.year) : undefined,
+          sortBy: currentFilters.sortBy,
+        }, page)
+      } else {
+        switch (tab) {
+          case 'popular':
+            response = await seriesService.getPopular(page)
+            break
+          case 'top_rated':
+            response = await seriesService.getTopRated(page)
+            break
+          case 'on_the_air':
+            response = await seriesService.getOnTheAir(page)
+            break
+        }
       }
       
       setSeries((prev) => {
@@ -72,9 +85,18 @@ export default function Series() {
     setCurrentPage(1)
     setSeries([])
     setTotalPages(0)
-    fetchSeries(1, activeTab)
+    fetchSeries(1, activeTab, filters)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab])
+
+  // Reiniciar cuando cambien los filtros
+  useEffect(() => {
+    setSeries([])
+    setCurrentPage(1)
+    loadedPages.current.clear()
+    fetchSeries(1, activeTab, filters)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters])
 
   const observerTarget = useInfiniteScroll(() => {
     if (loading) return
@@ -84,9 +106,13 @@ export default function Series() {
     const tabPages = getLoadedPagesForTab(activeTab)
     if (!tabPages.has(nextPage)) {
       setCurrentPage(nextPage)
-      fetchSeries(nextPage, activeTab)
+      fetchSeries(nextPage, activeTab, filters)
     }
   }, { rootMargin: '200px' })
+
+  const handleFilterChange = useCallback((newFilters: FilterState) => {
+    setFilters(newFilters)
+  }, [setFilters])
 
   if (error && series.length === 0) {
     return (
@@ -98,7 +124,7 @@ export default function Series() {
             setSeries([])
             setError(null)
             loadedPages.current.clear()
-            fetchSeries(1, activeTab)
+            fetchSeries(1, activeTab, filters)
           }}
           className="px-6 py-2 rounded-lg transition-colors"
           style={{
@@ -122,9 +148,16 @@ export default function Series() {
             Series de TV
           </h1>
         </div>
-        <p className="text-lg" style={{ color: 'var(--fg-muted)' }}>
+        <p className="text-lg mb-6" style={{ color: 'var(--fg-muted)' }}>
           Descubre las mejores series de televisión
         </p>
+
+        {/* Filtros Avanzados */}
+        <AdvancedFilters 
+          onFilterChange={handleFilterChange} 
+          mediaType="tv" 
+          initialFilters={filters}
+        />
       </div>
 
       {/* Tabs */}
