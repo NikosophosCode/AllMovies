@@ -1,0 +1,241 @@
+/* AdvancedFilters Styles */
+
+.advanced-filters {
+  margin-bottom: 2rem;
+}
+
+/* Toggle Button */
+.filters-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background-color: var(--surface-muted);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  color: var(--fg);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filters-toggle:hover {
+  background-color: var(--surface);
+  border-color: var(--accent);
+}
+
+.filters-toggle.active {
+  background-color: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.filters-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding: 0 0.5rem;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  margin-left: auto;
+}
+
+.filters-chevron {
+  transition: transform 0.3s ease;
+}
+
+.filters-chevron.rotate {
+  transform: rotate(180deg);
+}
+
+/* Panel */
+.filters-panel {
+  margin-top: 1rem;
+  background-color: var(--surface-muted);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header */
+.filters-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.filters-title {
+  font-size: 1.125rem;
+  font-weight: bold;
+  color: var(--fg);
+  margin: 0;
+}
+
+.filters-clear {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--fg-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filters-clear:hover {
+  background-color: var(--surface);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Content */
+.filters-content {
+  display: grid;
+  gap: 1.5rem;
+}
+
+/* Filter Group */
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.filter-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--fg);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Select */
+.filter-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  color: var(--input-fg);
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-select:hover {
+  border-color: var(--input-border-focus);
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: var(--input-border-focus);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1);
+}
+
+/* Genres Grid */
+.genres-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .genres-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}
+
+/* Genre Chip */
+.genre-chip {
+  padding: 0.625rem 1rem;
+  background-color: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  color: var(--fg);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.genre-chip:hover {
+  background-color: var(--surface-muted);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.genre-chip.active {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .filters-toggle {
+    padding: 0.875rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .filters-panel {
+    padding: 1rem;
+  }
+
+  .filters-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .filters-clear {
+    align-self: flex-end;
+  }
+
+  .genres-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .genre-chip {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+}
+
+/* Accesibilidad */
+.filters-toggle:focus-visible,
+.filters-clear:focus-visible,
+.filter-select:focus-visible,
+.genre-chip:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
