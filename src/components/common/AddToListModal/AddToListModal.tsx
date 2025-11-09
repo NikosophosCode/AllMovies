@@ -62,7 +62,7 @@ const AddToListModal = ({ isOpen, onClose, mediaId, mediaTitle }: AddToListModal
     try {
       setAddingToList(listId)
       setError(null)
-      await authService.addToList(listId, sessionId, mediaId)
+      await authService.addToList(listId, sessionId, mediaId, mediaType)
       
       // Mostrar feedback de éxito
       setSuccessList(listId)
@@ -91,9 +91,9 @@ const AddToListModal = ({ isOpen, onClose, mediaId, mediaTitle }: AddToListModal
         newListDescription.trim()
       )
       
-      // Añadir película a la nueva lista
+      // Añadir película o serie a la nueva lista
       if (response.list_id) {
-        await authService.addToList(response.list_id, sessionId, mediaId)
+        await authService.addToList(response.list_id, sessionId, mediaId, mediaType)
       }
       
       // Recargar listas y resetear formulario
