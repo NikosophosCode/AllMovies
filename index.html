@@ -1,10 +1,25 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>all-movies</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#d32f2f" />
+    <meta name="description" content="Explora películas y series con AllMovies. Información actualizada de TMDB." />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="AllMovies" />
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/icon-192.png" />
+    
+    <title>AllMovies - Explora Películas y Series</title>
+    
     <script>
       // Apply saved theme before the app and styles load to avoid flashes
       (function() {
@@ -22,6 +37,21 @@
           }
         } catch (_) {}
       })()
+    </script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+              console.log('SW registered:', registration)
+            })
+            .catch(error => {
+              console.log('SW registration failed:', error)
+            })
+        })
+      }
     </script>
   </head>
   <body>
