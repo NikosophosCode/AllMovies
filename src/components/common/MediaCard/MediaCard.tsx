@@ -9,6 +9,7 @@ interface MediaCardProps {
   media: Movie | Series
   mediaType?: 'movie' | 'tv'
   onClick?: () => void
+  priority?: boolean // Para LCP optimization
 }
 
 // Type guards
@@ -20,7 +21,7 @@ const isSeries = (media: Movie | Series): media is Series => {
   return 'name' in media
 }
 
-const MediaCard = ({ media, mediaType, onClick }: MediaCardProps) => {
+const MediaCard = ({ media, mediaType, onClick, priority = false }: MediaCardProps) => {
   // Auto-detectar el tipo si no se proporciona
   const detectedType = mediaType || (isMovie(media) ? 'movie' : 'tv')
   
@@ -66,6 +67,8 @@ const MediaCard = ({ media, mediaType, onClick }: MediaCardProps) => {
             type="poster"
             size="medium"
             aspectRatio="poster"
+            priority={priority}
+            fetchPriority={priority ? 'high' : 'auto'}
             className="transition-transform duration-300 group-hover:scale-105"
           />
           {/* Overlay optimizado - Menos saturado */}
