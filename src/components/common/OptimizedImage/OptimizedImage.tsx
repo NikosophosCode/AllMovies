@@ -1,0 +1,69 @@
+import { useState } from 'react'
+import { getImageUrl } from '@/utils/formatters'
+import { ImageOff } from 'lucide-react'
+
+interface OptimizedImageProps {
+  path: string | null
+  alt: string
+  type?: 'poster' | 'backdrop'
+  size?: 'small' | 'medium' | 'large'
+  className?: string
+  placeholder?: boolean
+  aspectRatio?: 'poster' | 'backdrop' | 'square' | 'auto'
+}
+
+const OptimizedImage = ({
+  path,
+  alt,
+  type = 'poster',
+  size = 'medium',
+  className = '',
+  placeholder = true,
+  aspectRatio = 'auto',
+}: OptimizedImageProps) => {
+  const [isLoading, setIsLoading] = useState(placeholder)
+  const [hasError, setHasError] = useState(false)
+
+  const imageSrc = getImageUrl(path, type, size)
+
+  const aspectRatioClass = {
+    poster: 'aspect-[2/3]',
+    backdrop: 'aspect-[16/9]',
+    square: 'aspect-square',
+    auto: '',
+  }[aspectRatio]
+
+  return (
+    <div
+      className={`relative overflow-hidden bg-slate-200 dark:bg-slate-700 ${aspectRatioClass} ${className}`}
+    >
+      {isLoading && placeholder && (
+        <div className="absolute inset-0 animate-pulse bg-linear-to-br from-slate-300 to-slate-200 dark:from-slate-600 dark:to-slate-700" />
+      )}
+
+      {!hasError && path ? (
+        <img
+          src={imageSrc}
+          alt={alt}
+          className={`w-full h-full object-cover transition-opacity duration-300 ${
+            isLoading ? 'opacity-0' : 'opacity-100'
+          }`}
+          loading="lazy"
+          decoding="async"
+          onLoad={() => setIsLoading(false)}
+          onError={() => {
+            setHasError(true)
+            setIsLoading(false)
+          }}
+        />
+      ) : (
+        <div className="flex flex-col items-center justify-center h-full text-slate-400 dark:text-slate-500 gap-2">
+          <ImageOff className="w-12 h-12" />
+          <span className="text-sm">No disponible</span>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default OptimizedImage
