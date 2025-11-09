@@ -1,0 +1,5 @@
+# Redirect all traffic to index.html for SPA routing
+/*    /index.html   200
+
+# Force HTTPS
+http://*  https://:splat  301!
