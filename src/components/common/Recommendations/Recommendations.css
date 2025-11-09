@@ -34,6 +34,6 @@
 @media (min-width: 1024px) {
   .recommendations-grid {
     gap: 1.5rem;
-    width: 85%;
+    width: 95%;
   }
 }
