@@ -24,19 +24,41 @@ export default defineConfig({
     open: true,
     strictPort: false,
     host: true,
+    fs: {
+      strict: false,
+    },
   },
   build: {
     outDir: 'dist',
     sourcemap: false,
+    minify: 'esbuild',
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          api: ['axios'],
-          ui: ['lucide-react'],
-          state: ['zustand'],
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-ui': ['lucide-react'],
+          'vendor-http': ['axios'],
+          'vendor-state': ['zustand'],
         },
       },
     },
+    chunkSizeWarningLimit: 600,
+    assetsInlineLimit: 4096,
+    cssCodeSplit: true,
+    reportCompressedSize: false,
+  },
+  optimizeDeps: {
+    include: [
+      'react',
+      'react-dom',
+      'react-router-dom',
+      'axios',
+      'lucide-react',
+      'zustand',
+    ],
+    exclude: [],
+  },
+  esbuild: {
+    logOverride: { 'this-is-undefined-in-esm': 'silent' },
   },
 })
