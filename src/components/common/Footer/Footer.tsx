@@ -1,6 +1,6 @@
 import { Heart } from 'lucide-react'
-import logo from '@/assets/icons/logo.png'
-import logoDark from '@/assets/icons/logo-dark.png'
+import logo from '@/assets/icons/logo.webp'
+import logoDark from '@/assets/icons/logo-dark.webp'
 
 const Footer = () => {
   return (

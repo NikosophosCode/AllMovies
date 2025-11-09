@@ -6,8 +6,8 @@ import type { Movie } from '@/types'
 import { movieService } from '@/services'
 import Parallax from '@/components/common/Parallax'
 import { usePrefetch, useMetaTags } from '@/hooks'
-import logo from '@/assets/icons/logo.png'
-import logoDark from '@/assets/icons/logo-dark.png'
+// import logo from '@/assets/icons/logo.webp'
+// import logoDark from '@/assets/icons/logo-dark.webp'
 
 const Home = () => {
   const [comingSoonMovies, setComingSoonMovies] = useState<Movie[]>([])
@@ -80,16 +80,9 @@ const Home = () => {
         }
       >
         <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className=" glass-morphism rounded-2xl p-8 md:p-12">
+          <div className=" glass-morphism rounded-2xl p-4 md:p-10">
             <span className="inline-block text-red-600 font-semibold tracking-wider uppercase text-xs mb-3">Discover</span>
-            <h1 className="animate-fade-in">
-              {/* Light logo */}
-              <img src={logo} alt="AllMovies" className="h-auto w-48 logo-light" />
-        
-              {/* Dark logo */}
-              <img src={logoDark} alt="AllMovies" className="h-auto w-48 logo-dark" />
-            </h1>
-            <p className="mt-4 text-lg animate-slide-in-up" style={{ color: 'var(--fg-muted)' }}>
+            <p className=" text-lg animate-slide-in-up" style={{ color: 'var(--fg-muted)' }}>
               Explore coming soon and trending titles with a clean, fast experience.
             </p>
           </div>

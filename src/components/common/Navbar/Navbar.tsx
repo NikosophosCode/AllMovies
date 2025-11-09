@@ -3,8 +3,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Menu, X, Search, Heart, User, LogIn, LogOut, List } from 'lucide-react'
 import ThemeSwitcher from '../ThemeSwitcher'
 import { useAuth } from '@/hooks'
-import logo from '@/assets/icons/logo.png'
-import logoDark from '@/assets/icons/logo-dark.png'
+import logo from '@/assets/icons/logo.webp'
+import logoDark from '@/assets/icons/logo-dark.webp'
 
 
 const Navbar = () => {
