@@ -50,12 +50,12 @@ export default function ListDetail() {
     }
   }, [listId])
 
-  const handleRemoveItem = async (mediaId: number) => {
-    if (!sessionId || !window.confirm('¿Eliminar esta película de la lista?')) return
+  const handleRemoveItem = async (mediaId: number, mediaType: 'movie' | 'tv') => {
+    if (!sessionId || !window.confirm('¿Eliminar este contenido de la lista?')) return
 
     try {
       setRemovingItem(mediaId)
-      await authService.removeFromList(listId, sessionId, mediaId)
+      await authService.removeFromList(listId, sessionId, mediaId, mediaType)
       
       // Actualizar la lista localmente
       setList(prev => {
@@ -186,7 +186,7 @@ export default function ListDetail() {
                 {/* Botón eliminar */}
                 {isAuthenticated && (
                   <button
-                    onClick={() => handleRemoveItem(item.id)}
+                    onClick={() => handleRemoveItem(item.id, mediaType)}
                     disabled={isRemoving}
                     className="absolute top-2 right-2 p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 z-10"
                     style={{

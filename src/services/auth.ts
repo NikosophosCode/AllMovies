@@ -195,24 +195,24 @@ export const authService = {
   },
 
   /**
-   * Añadir película a lista
+   * Añadir película o serie a lista
    */
-  async addToList(listId: number, sessionId: string, mediaId: number) {
+  async addToList(listId: number, sessionId: string, mediaId: number, mediaType: 'movie' | 'tv') {
     const { data } = await client.post(
       `/list/${listId}/add_item`,
-      { media_id: mediaId },
+      { media_id: mediaId, media_type: mediaType },
       { params: { session_id: sessionId } }
     )
     return data
   },
 
   /**
-   * Eliminar película de lista
+   * Eliminar película o serie de lista
    */
-  async removeFromList(listId: number, sessionId: string, mediaId: number) {
+  async removeFromList(listId: number, sessionId: string, mediaId: number, mediaType: 'movie' | 'tv') {
     const { data } = await client.post(
       `/list/${listId}/remove_item`,
-      { media_id: mediaId },
+      { media_id: mediaId, media_type: mediaType },
       { params: { session_id: sessionId } }
     )
     return data
