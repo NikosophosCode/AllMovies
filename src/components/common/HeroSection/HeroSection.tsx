@@ -15,10 +15,10 @@ const HeroSection = ({ children, className = '' }: HeroSectionProps) => {
   return (
     <section 
       className={`relative py-12 md:py-20 ${className}`}
-      style={{
-        // Altura mínima fija para prevenir layout shifts
-        minHeight: '400px',
-      }}
+      // style={{
+      //   // Altura mínima fija para prevenir layout shifts
+      //   minHeight: '400px',
+      // }}
     >
       {/* Background decorativo - Sin parallax */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
