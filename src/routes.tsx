@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Layout from '@/components/common/Layout'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
+import { ScrollToTop } from '@/components/common'
 import Home from '@/pages/Home'
 import Search from '@/pages/Search'
 import Trending from '@/pages/Trending'
@@ -13,7 +14,9 @@ const MovieDetail = lazy(() => import('@/pages/MovieDetail'))
 const SeriesDetail = lazy(() => import('@/pages/SeriesDetail'))
 const SeasonDetail = lazy(() => import('@/pages/SeasonDetail'))
 const Favorites = lazy(() => import('@/pages/Favorites'))
+const Watchlist = lazy(() => import('@/pages/Watchlist'))
 const MyLists = lazy(() => import('@/pages/MyLists'))
+const ListDetail = lazy(() => import('@/pages/ListDetail'))
 const AuthCallback = lazy(() => import('@/pages/AuthCallback'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
 const TailwindTest = lazy(() => import('@/pages/TailwindTest'))
@@ -23,6 +26,7 @@ const Fallback = () => <LoadingSpinner fullScreen />
 export const AppRoutes = () => {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
@@ -77,10 +81,26 @@ export const AppRoutes = () => {
             }
           />
           <Route
+            path="/watchlist"
+            element={
+              <Suspense fallback={<Fallback />}>
+                <Watchlist />
+              </Suspense>
+            }
+          />
+          <Route
             path="/my-lists"
             element={
               <Suspense fallback={<Fallback />}>
                 <MyLists />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/my-lists/:id"
+            element={
+              <Suspense fallback={<Fallback />}>
+                <ListDetail />
               </Suspense>
             }
           />
