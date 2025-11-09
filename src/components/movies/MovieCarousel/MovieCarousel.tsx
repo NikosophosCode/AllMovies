@@ -8,9 +8,10 @@ interface MovieCarouselProps {
   movies: Movie[] | Series[]
   mediaType?: 'movie' | 'tv'
   loading?: boolean
+  prioritizeFirst?: boolean // Para LCP optimization
 }
 
-const MovieCarousel = ({ title, movies, mediaType = 'movie', loading }: MovieCarouselProps) => {
+const MovieCarousel = ({ title, movies, mediaType = 'movie', loading, prioritizeFirst = false }: MovieCarouselProps) => {
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(false)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
@@ -85,9 +86,13 @@ const MovieCarousel = ({ title, movies, mediaType = 'movie', loading }: MovieCar
             msOverflowStyle: 'none',
           }}
         >
-          {movies.map((movie) => (
+          {movies.map((movie, index) => (
             <div key={movie.id} className="shrink-0 w-48">
-              <MediaCard media={movie} mediaType={mediaType} />
+              <MediaCard 
+                media={movie} 
+                mediaType={mediaType}
+                priority={prioritizeFirst && index === 0}
+              />
             </div>
           ))}
         </div>
