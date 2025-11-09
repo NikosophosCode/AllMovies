@@ -1,8 +1,9 @@
 import { Heart, Star } from 'lucide-react'
 import type { Movie } from '@/types'
-import { getImageUrl, formatRating } from '@/utils/formatters'
-import { useMovies } from '@/hooks'
+import { formatRating } from '@/utils/formatters'
+import { useMovies, usePrefetch } from '@/hooks'
 import { Link } from 'react-router-dom'
+import { OptimizedImage } from '@/components/common'
 
 interface MovieCardProps {
   movie: Movie
@@ -11,6 +12,7 @@ interface MovieCardProps {
 
 const MovieCard = ({ movie, onClick }: MovieCardProps) => {
   const { isFavorite, addFavorite, removeFavorite } = useMovies()
+  const { prefetchMovie } = usePrefetch()
   const favorited = isFavorite('movie', movie.id)
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
@@ -23,19 +25,25 @@ const MovieCard = ({ movie, onClick }: MovieCardProps) => {
     }
   }
 
+  const handleMouseEnter = () => {
+    prefetchMovie(movie.id)
+  }
+
   return (
-    <Link to={`/movies/${movie.id}`}>
+    <Link to={`/movies/${movie.id}`} onMouseEnter={handleMouseEnter}>
       <div
         className="group cursor-pointer rounded-xl overflow-hidden glass-card transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-lg"
         onClick={onClick}
       >
         {/* Imagen del poster */}
-        <div className="relative w-full rounded-xl aspect-2/3 overflow-hidden" style={{ backgroundColor: 'var(--surface-muted)' }}>
-          <img
-            src={getImageUrl(movie.poster_path, 'poster', 'medium')}
+        <div className="relative w-full rounded-xl overflow-hidden" style={{ backgroundColor: 'var(--surface-muted)' }}>
+          <OptimizedImage
+            path={movie.poster_path}
             alt={movie.title}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-            loading="lazy"
+            type="poster"
+            size="medium"
+            aspectRatio="poster"
+            className="transition-transform duration-300 group-hover:scale-105"
           />
           {/* Overlay optimizado - Menos saturado */}
           <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">

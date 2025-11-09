@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Search as SearchIcon, Filter } from 'lucide-react'
-import { useDebounce } from '@/hooks'
+import { useDebounce, usePrefetch, useMetaTags } from '@/hooks'
 import MediaCard from '@/components/common/MediaCard'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import ErrorMessage from '@/components/common/ErrorMessage'
@@ -26,6 +26,18 @@ export default function Search() {
   const [showFilters, setShowFilters] = useState(false)
 
   const debouncedQuery = useDebounce(query, 500)
+  const { prefetchSearchResults } = usePrefetch()
+
+  // SEO Meta Tags
+  useMetaTags({
+    title: query ? `Búsqueda: ${query}` : 'Buscar Películas y Series',
+    description: query 
+      ? `Resultados de búsqueda para "${query}". Encuentra películas y series.`
+      : 'Busca entre miles de películas y series. Encuentra tu próximo favorito.',
+    url: window.location.href,
+    type: 'website',
+    keywords: ['búsqueda', 'películas', 'series', query].filter(Boolean),
+  })
 
   const performSearch = useCallback(async (searchQuery: string) => {
     if (!searchQuery.trim()) {
@@ -50,13 +62,18 @@ export default function Search() {
       }
 
       setResults(response.results)
+      
+      // Prefetch de resultados relacionados
+      if (searchQuery.length > 3) {
+        prefetchSearchResults(searchQuery)
+      }
     } catch (err) {
       setError('Error al buscar. Intenta de nuevo.')
       console.error(err)
     } finally {
       setLoading(false)
     }
-  }, [mediaType])
+  }, [mediaType, prefetchSearchResults])
 
   useEffect(() => {
     if (debouncedQuery && debouncedQuery !== initialQuery) {

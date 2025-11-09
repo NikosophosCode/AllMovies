@@ -6,11 +6,11 @@ import ErrorMessage from '@/components/common/ErrorMessage'
 import Rating from '@/components/common/Rating'
 import Recommendations from '@/components/common/Recommendations'
 import TrailerModal from '@/components/movies/TrailerModal'
-import { AddToListModal } from '@/components/common'
+import { AddToListModal, OptimizedImage } from '@/components/common'
 import { ReviewsSection } from '@/components/reviews'
 import type { Series, Video } from '@/types'
 import { seriesService, authService, reviewsService } from '@/services'
-import { useMovies, useAuth } from '@/hooks'
+import { useMovies, useAuth, useMetaTags } from '@/hooks'
 import { getImageUrl, formatDate, formatRating } from '@/utils/formatters'
 import { shareContent, getSeriesShareData } from '@/utils/share'
 
@@ -65,6 +65,17 @@ export default function SeriesDetail() {
     if (seriesId) fetchSeries()
   }, [seriesId, isAuthenticated, sessionId])
 
+  // SEO Meta Tags
+  useMetaTags({
+    title: series?.name || 'Serie',
+    description: series?.overview || 'Descubre esta serie en AllMovies',
+    image: series ? getImageUrl(series.poster_path, 'poster', 'large') : undefined,
+    url: window.location.href,
+    type: 'tv.show',
+    keywords: series?.genres?.map(g => g.name) || [],
+    publishedTime: series?.first_air_date,
+  })
+
   const handleFavorite = () => {
     if (favorited) {
       removeFavorite('tv', seriesId)
@@ -103,7 +114,6 @@ export default function SeriesDetail() {
   if (!series) return <ErrorMessage message="Serie no encontrada" />
 
   const backdropUrl = getImageUrl(series.backdrop_path, 'backdrop', 'large')
-  const posterUrl = getImageUrl(series.poster_path, 'poster', 'large')
 
   return (
     <div className="animate-fade-in">
@@ -144,9 +154,12 @@ export default function SeriesDetail() {
         {/* Poster y acciones */}
         <div className="md:col-span-1">
           <div className="sticky top-24">
-            <img
-              src={posterUrl}
+            <OptimizedImage
+              path={series.poster_path}
               alt={series.name}
+              type="poster"
+              size="large"
+              aspectRatio="poster"
               className="w-full rounded-lg shadow-lg mb-4"
             />
 
@@ -316,10 +329,13 @@ export default function SeriesDetail() {
                       onClick={() => navigate(`/series/${seriesId}/season/${season.season_number}`)}
                       className="glass-card rounded-lg overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 text-left"
                     >
-                      <img
-                        src={getImageUrl(season.poster_path, 'poster', 'small')}
+                      <OptimizedImage
+                        path={season.poster_path}
                         alt={season.name}
-                        className="w-full h-48 object-cover"
+                        type="poster"
+                        size="small"
+                        aspectRatio="poster"
+                        className="w-full"
                       />
                       <div className="p-3">
                         <p className="font-semibold text-sm" style={{ color: 'var(--fg)' }}>{season.name}</p>
@@ -342,10 +358,13 @@ export default function SeriesDetail() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {series.credits.cast.slice(0, 8).map((actor) => (
                   <div key={actor.id} className="text-center">
-                    <img
-                      src={getImageUrl(actor.profile_path, 'poster', 'small')}
+                    <OptimizedImage
+                      path={actor.profile_path}
                       alt={actor.name}
-                      className="w-full h-40 object-cover rounded-lg mb-2"
+                      type="profile"
+                      size="small"
+                      aspectRatio="poster"
+                      className="w-full h-40 rounded-lg mb-2"
                     />
                     <p className="font-semibold text-sm" style={{ color: 'var(--fg)' }}>{actor.name}</p>
                     <p className="text-xs" style={{ color: 'var(--fg-muted)' }}>

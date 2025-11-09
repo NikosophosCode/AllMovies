@@ -2,15 +2,20 @@ import { POSTER_SIZES, BACKDROP_SIZES } from './constants'
 
 export const getImageUrl = (
   path: string | null,
-  type: 'poster' | 'backdrop' = 'poster',
-  size: 'small' | 'medium' | 'large' = 'medium'
+  type: 'poster' | 'backdrop' | 'profile' = 'poster',
+  size: 'small' | 'medium' | 'large' | 'original' = 'medium'
 ): string => {
   if (!path) {
-    return `https://via.placeholder.com/${type === 'poster' ? '342x513' : '1280x720'}?text=No+Image`
+    const placeholderSize = type === 'poster' || type === 'profile' ? '342x513' : '1280x720'
+    return `https://via.placeholder.com/${placeholderSize}?text=No+Image`
   }
 
-  const baseUrl = type === 'poster' ? POSTER_SIZES : BACKDROP_SIZES
-  const sizeUrl = baseUrl[size.toUpperCase() as keyof typeof baseUrl]
+  // Profile images use the same sizes as poster
+  const imageType = type === 'profile' ? 'poster' : type
+  const baseUrl = imageType === 'poster' ? POSTER_SIZES : BACKDROP_SIZES
+  const sizeUrl = size === 'original' 
+    ? 'https://image.tmdb.org/t/p/original'
+    : baseUrl[size.toUpperCase() as keyof typeof baseUrl]
   return `${sizeUrl}${path}`
 }
 

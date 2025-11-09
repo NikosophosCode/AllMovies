@@ -1,8 +1,9 @@
 import { Heart, Star } from 'lucide-react'
 import type { Movie, Series } from '@/types'
-import { getImageUrl, formatRating } from '@/utils/formatters'
-import { useMovies } from '@/hooks'
+import { formatRating } from '@/utils/formatters'
+import { useMovies, usePrefetch } from '@/hooks'
 import { Link } from 'react-router-dom'
+import { OptimizedImage } from '@/components/common'
 
 interface MediaCardProps {
   media: Movie | Series
@@ -24,6 +25,7 @@ const MediaCard = ({ media, mediaType, onClick }: MediaCardProps) => {
   const detectedType = mediaType || (isMovie(media) ? 'movie' : 'tv')
   
   const { isFavorite, addFavorite, removeFavorite } = useMovies()
+  const { prefetchMovie, prefetchSeries } = usePrefetch()
   const favorited = isFavorite(detectedType, media.id)
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
@@ -36,24 +38,35 @@ const MediaCard = ({ media, mediaType, onClick }: MediaCardProps) => {
     }
   }
 
+  const handleMouseEnter = () => {
+    // Prefetch de detalles al hacer hover
+    if (detectedType === 'movie') {
+      prefetchMovie(media.id)
+    } else {
+      prefetchSeries(media.id)
+    }
+  }
+
   const title = isMovie(media) ? media.title : media.name
   const releaseDate = isMovie(media) ? media.release_date : media.first_air_date
   const year = releaseDate ? new Date(releaseDate).getFullYear() : 'N/A'
   const linkTo = detectedType === 'movie' ? `/movies/${media.id}` : `/series/${media.id}`
 
   return (
-    <Link to={linkTo}>
+    <Link to={linkTo} onMouseEnter={handleMouseEnter}>
       <div
         className="group cursor-pointer rounded-xl overflow-hidden glass-card transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-lg"
         onClick={onClick}
       >
         {/* Imagen del poster */}
-        <div className="relative w-full rounded-xl aspect-2/3 overflow-hidden" style={{ backgroundColor: 'var(--surface-muted)' }}>
-          <img
-            src={getImageUrl(media.poster_path, 'poster', 'medium')}
+        <div className="relative w-full rounded-xl overflow-hidden" style={{ backgroundColor: 'var(--surface-muted)' }}>
+          <OptimizedImage
+            path={media.poster_path}
             alt={title}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-            loading="lazy"
+            type="poster"
+            size="medium"
+            aspectRatio="poster"
+            className="transition-transform duration-300 group-hover:scale-105"
           />
           {/* Overlay optimizado - Menos saturado */}
           <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">

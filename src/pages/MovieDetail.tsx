@@ -6,11 +6,11 @@ import ErrorMessage from '@/components/common/ErrorMessage'
 import Rating from '@/components/common/Rating'
 import Recommendations from '@/components/common/Recommendations'
 import TrailerModal from '@/components/movies/TrailerModal'
-import { AddToListModal } from '@/components/common'
+import { AddToListModal, OptimizedImage } from '@/components/common'
 import { ReviewsSection } from '@/components/reviews'
 import type { Movie, Video } from '@/types'
 import { movieService, authService, reviewsService } from '@/services'
-import { useMovies, useAuth } from '@/hooks'
+import { useMovies, useAuth, useMetaTags } from '@/hooks'
 import { getImageUrl, formatDate, formatRating, formatRuntime } from '@/utils/formatters'
 import { shareContent, getMovieShareData } from '@/utils/share'
 
@@ -65,6 +65,17 @@ export default function MovieDetail() {
     if (movieId) fetchMovie()
   }, [movieId, isAuthenticated, sessionId])
 
+  // SEO Meta Tags
+  useMetaTags({
+    title: movie?.title || 'Película',
+    description: movie?.overview || 'Descubre esta película en AllMovies',
+    image: movie ? getImageUrl(movie.poster_path, 'poster', 'large') : undefined,
+    url: window.location.href,
+    type: 'movie',
+    keywords: movie?.genres?.map(g => g.name) || [],
+    publishedTime: movie?.release_date,
+  })
+
   const handleFavorite = () => {
     if (favorited) {
       removeFavorite('movie', movieId)
@@ -104,7 +115,6 @@ export default function MovieDetail() {
   if (!movie) return <ErrorMessage message="Película no encontrada" />
 
   const backdropUrl = getImageUrl(movie.backdrop_path, 'backdrop', 'large')
-  const posterUrl = getImageUrl(movie.poster_path, 'poster', 'large')
 
   return (
     <div className="animate-fade-in">
@@ -145,9 +155,12 @@ export default function MovieDetail() {
         {/* Poster y acciones */}
         <div className="md:col-span-1">
           <div className="sticky top-24">
-            <img
-              src={posterUrl}
+            <OptimizedImage
+              path={movie.poster_path}
               alt={movie.title}
+              type="poster"
+              size="large"
+              aspectRatio="poster"
               className="w-full rounded-lg shadow-lg mb-4"
             />
 
@@ -306,10 +319,13 @@ export default function MovieDetail() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {movie.credits.cast.slice(0, 8).map((actor) => (
                   <div key={actor.id} className="text-center">
-                    <img
-                      src={getImageUrl(actor.profile_path, 'poster', 'small')}
+                    <OptimizedImage
+                      path={actor.profile_path}
                       alt={actor.name}
-                      className="w-full h-40 object-cover rounded-lg mb-2"
+                      type="profile"
+                      size="small"
+                      aspectRatio="poster"
+                      className="w-full h-40 rounded-lg mb-2"
                     />
                     <p className="font-semibold text-sm" style={{ color: 'var(--fg)' }}>{actor.name}</p>
                     <p className="text-xs" style={{ color: 'var(--fg-muted)' }}>

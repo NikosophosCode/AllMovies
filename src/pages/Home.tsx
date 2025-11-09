@@ -5,6 +5,7 @@ import SearchBar from '@/components/search/SearchBar'
 import type { Movie } from '@/types'
 import { movieService } from '@/services'
 import Parallax from '@/components/common/Parallax'
+import { usePrefetch, useMetaTags } from '@/hooks'
 import logo from '@/assets/icons/logo.png'
 import logoDark from '@/assets/icons/logo-dark.png'
 
@@ -13,6 +14,16 @@ const Home = () => {
   const [trendingMovies, setTrendingMovies] = useState<Movie[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { prefetchPopularMovies, prefetchUpcoming } = usePrefetch()
+
+  // SEO Meta Tags
+  useMetaTags({
+    title: 'AllMovies - Descubre Películas y Series',
+    description: 'Explora las últimas películas, series de tendencia y próximos estrenos. Tu destino para todo el entretenimiento cinematográfico.',
+    url: window.location.href,
+    type: 'website',
+    keywords: ['películas', 'series', 'cine', 'streaming', 'estrenos', 'trending'],
+  })
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,6 +35,10 @@ const Home = () => {
         ])
         setComingSoonMovies(upcoming.results.slice(0, 12))
         setTrendingMovies(trending.results.slice(0, 12))
+
+        // Prefetch de datos adicionales para mejorar la navegación
+        prefetchPopularMovies()
+        prefetchUpcoming()
       } catch (err) {
         setError('Error loading movies')
         console.error(err)
@@ -33,7 +48,7 @@ const Home = () => {
     }
 
     fetchData()
-  }, [])
+  }, [prefetchPopularMovies, prefetchUpcoming])
 
   if (loading) return <LoadingSpinner fullScreen />
   if (error) return <div className="text-center py-12" style={{ color: 'var(--error-fg)' }}>{error}</div>

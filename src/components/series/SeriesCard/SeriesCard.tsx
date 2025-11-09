@@ -1,8 +1,9 @@
 import { Heart, Star } from 'lucide-react'
 import type { Series } from '@/types'
-import { getImageUrl, formatRating } from '@/utils/formatters'
-import { useMovies } from '@/hooks'
+import { formatRating } from '@/utils/formatters'
+import { useMovies, usePrefetch } from '@/hooks'
 import { Link } from 'react-router-dom'
+import { OptimizedImage } from '@/components/common'
 
 interface SeriesCardProps {
   series: Series
@@ -11,6 +12,7 @@ interface SeriesCardProps {
 
 const SeriesCard = ({ series, onClick }: SeriesCardProps) => {
   const { isFavorite, addFavorite, removeFavorite } = useMovies()
+  const { prefetchSeries } = usePrefetch()
   const favorited = isFavorite('tv', series.id)
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
@@ -23,21 +25,27 @@ const SeriesCard = ({ series, onClick }: SeriesCardProps) => {
     }
   }
 
+  const handleMouseEnter = () => {
+    prefetchSeries(series.id)
+  }
+
   const year = series.first_air_date ? new Date(series.first_air_date).getFullYear() : 'N/A'
 
   return (
-    <Link to={`/series/${series.id}`}>
+    <Link to={`/series/${series.id}`} onMouseEnter={handleMouseEnter}>
       <div
         className="group cursor-pointer rounded-xl overflow-hidden glass-card transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-lg"
         onClick={onClick}
       >
         {/* Imagen del poster */}
-        <div className="relative w-full rounded-xl aspect-2/3 overflow-hidden" style={{ backgroundColor: 'var(--surface-muted)' }}>
-          <img
-            src={getImageUrl(series.poster_path, 'poster', 'medium')}
+        <div className="relative w-full rounded-xl overflow-hidden" style={{ backgroundColor: 'var(--surface-muted)' }}>
+          <OptimizedImage
+            path={series.poster_path}
             alt={series.name}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-            loading="lazy"
+            type="poster"
+            size="medium"
+            aspectRatio="poster"
+            className="transition-transform duration-300 group-hover:scale-105"
           />
           {/* Overlay optimizado - Menos saturado */}
           <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">

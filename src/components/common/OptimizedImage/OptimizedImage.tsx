@@ -5,8 +5,8 @@ import { ImageOff } from 'lucide-react'
 interface OptimizedImageProps {
   path: string | null
   alt: string
-  type?: 'poster' | 'backdrop'
-  size?: 'small' | 'medium' | 'large'
+  type?: 'poster' | 'backdrop' | 'profile'
+  size?: 'small' | 'medium' | 'large' | 'original'
   className?: string
   placeholder?: boolean
   aspectRatio?: 'poster' | 'backdrop' | 'square' | 'auto'
