@@ -46,6 +46,8 @@ export default defineConfig({
     assetsInlineLimit: 4096,
     cssCodeSplit: true,
     reportCompressedSize: false,
+    // Ensure SEO files are copied to dist
+    copyPublicDir: true,
   },
   optimizeDeps: {
     include: [
