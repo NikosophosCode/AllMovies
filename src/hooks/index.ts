@@ -9,3 +9,10 @@ export { useFilters } from './useFilters'
 export { useVirtualScroll } from './useVirtualScroll'
 export { usePrefetch } from './usePrefetch'
 export { useMetaTags } from './useMetaTags'
+export { 
+  scheduleRead, 
+  scheduleWrite, 
+  useDimensionsOptimized, 
+  useScrollOptimized, 
+  useStyleUpdate 
+} from './useOptimizedDOM'
