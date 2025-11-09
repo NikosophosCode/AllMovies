@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Heart, Share2, Clock, Calendar, Star, Play } from 'lucide-react'
+import { ArrowLeft, Heart, Share2, Clock, Calendar, Star, Play, List } from 'lucide-react'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import ErrorMessage from '@/components/common/ErrorMessage'
 import Rating from '@/components/common/Rating'
 import Recommendations from '@/components/common/Recommendations'
 import TrailerModal from '@/components/movies/TrailerModal'
+import { AddToListModal } from '@/components/common'
+import { ReviewsSection } from '@/components/reviews'
 import type { Movie, Video } from '@/types'
-import { movieService, authService } from '@/services'
+import { movieService, authService, reviewsService } from '@/services'
 import { useMovies, useAuth } from '@/hooks'
 import { getImageUrl, formatDate, formatRating, formatRuntime } from '@/utils/formatters'
+import { shareContent, getMovieShareData } from '@/utils/share'
 
 export default function MovieDetail() {
   const { id } = useParams<{ id: string }>()
@@ -20,6 +23,7 @@ export default function MovieDetail() {
   const [selectedTrailer, setSelectedTrailer] = useState<Video | null>(null)
   const [showTrailerModal, setShowTrailerModal] = useState(false)
   const [userRating, setUserRating] = useState(0)
+  const [showAddToListModal, setShowAddToListModal] = useState(false)
   const { isFavorite, addFavorite, removeFavorite } = useMovies()
   const { isAuthenticated, sessionId } = useAuth()
 
@@ -38,6 +42,18 @@ export default function MovieDetail() {
           (v: Video) => v.type === 'Trailer' && v.site === 'YouTube'
         )
         if (trailer) setSelectedTrailer(trailer)
+
+        // Cargar rating del usuario si está autenticado
+        if (isAuthenticated && sessionId) {
+          try {
+            const accountStates = await authService.getMovieAccountStates(movieId, sessionId)
+            if (accountStates.rated && typeof accountStates.rated.value === 'number') {
+              setUserRating(accountStates.rated.value)
+            }
+          } catch (err) {
+            console.error('Error al cargar rating del usuario:', err)
+          }
+        }
       } catch (err) {
         setError('Error al cargar los detalles de la película')
         console.error(err)
@@ -47,7 +63,7 @@ export default function MovieDetail() {
     }
 
     if (movieId) fetchMovie()
-  }, [movieId])
+  }, [movieId, isAuthenticated, sessionId])
 
   const handleFavorite = () => {
     if (favorited) {
@@ -65,6 +81,21 @@ export default function MovieDetail() {
       setUserRating(rating)
     } catch (err) {
       console.error('Error al valorar película:', err)
+    }
+  }
+
+  const handleShare = async () => {
+    if (!movie) return
+    
+    const shareData = getMovieShareData(movieId, movie.title)
+    const result = await shareContent(shareData)
+    
+    if (result.success) {
+      // Opcional: mostrar un toast o feedback visual
+      console.log(`Compartido exitosamente vía ${result.method}`)
+    } else {
+      console.error('Error al compartir:', result.error)
+      alert(result.error || 'No se pudo compartir')
     }
   }
 
@@ -134,6 +165,7 @@ export default function MovieDetail() {
               </button>
 
               <button 
+                onClick={handleShare}
                 className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold transition-colors"
                 style={{
                   backgroundColor: 'var(--surface-muted)',
@@ -144,6 +176,21 @@ export default function MovieDetail() {
                 Compartir
               </button>
 
+              {/* Botón Añadir a Lista */}
+              {isAuthenticated && (
+                <button 
+                  onClick={() => setShowAddToListModal(true)}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold transition-colors"
+                  style={{
+                    backgroundColor: 'var(--surface-muted)',
+                    color: 'var(--fg)'
+                  }}
+                >
+                  <List size={20} />
+                  Añadir a lista
+                </button>
+              )}
+
               {/* Rating Component */}
               {isAuthenticated && (
                 <div className="pt-3">
@@ -153,7 +200,7 @@ export default function MovieDetail() {
                   <Rating
                     initialRating={userRating}
                     onRate={handleRating}
-                    size="large"
+                    size="medium"
                     maxRating={10}
                   />
                 </div>
@@ -283,6 +330,13 @@ export default function MovieDetail() {
               service={movieService}
             />
           </div>
+
+          {/* Reseñas */}
+          <ReviewsSection
+            mediaId={movieId}
+            mediaType="movie"
+            fetchReviews={reviewsService.getMovieReviews}
+          />
         </div>
       </div>
 
@@ -291,6 +345,15 @@ export default function MovieDetail() {
         video={selectedTrailer}
         isOpen={showTrailerModal}
         onClose={() => setShowTrailerModal(false)}
+      />
+
+      {/* Add to List Modal */}
+      <AddToListModal
+        isOpen={showAddToListModal}
+        onClose={() => setShowAddToListModal(false)}
+        mediaId={movieId}
+        mediaType="movie"
+        mediaTitle={movie.title}
       />
     </div>
   )
