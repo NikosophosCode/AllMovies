@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef } from 'react'
-import { useInfiniteScroll } from '@/hooks'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { useInfiniteScroll, useFilters } from '@/hooks'
 import { MovieGrid } from '@/components/movies'
-import { LoadingSpinner } from '@/components/common'
+import { LoadingSpinner, AdvancedFilters } from '@/components/common'
+import type { FilterState } from '@/components/common'
 import type { Movie } from '@/types'
 import { movieService } from '@/services'
 import { mergeUniqueById } from '@/utils'
@@ -12,9 +13,10 @@ export default function Movies() {
   const [totalPages, setTotalPages] = useState(0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const { filters, setFilters } = useFilters('movie')
   const loadedPages = useRef(new Set<number>())
 
-  const fetchMovies = async (page: number) => {
+  const fetchMovies = async (page: number, currentFilters: FilterState) => {
     // Evitar cargar la misma página dos veces
     if (loadedPages.current.has(page)) return
     if (page > totalPages && totalPages > 0) return
@@ -24,7 +26,16 @@ export default function Movies() {
       setLoading(true)
       loadedPages.current.add(page)
       
-      const response = await movieService.getPopular(page)
+      // Usar filtros si están activos
+      const hasFilters = currentFilters.genres.length > 0 || currentFilters.year !== '' || currentFilters.sortBy !== 'popularity.desc'
+      
+      const response = hasFilters
+        ? await movieService.searchByFilters({
+            genres: currentFilters.genres,
+            year: currentFilters.year ? Number(currentFilters.year) : undefined,
+            sortBy: currentFilters.sortBy,
+          }, page)
+        : await movieService.getPopular(page)
       
       setMovies((prev) => {
         // Usar la utilidad para merge sin duplicados
@@ -43,9 +54,18 @@ export default function Movies() {
   }
 
   useEffect(() => {
-    fetchMovies(1)
+    fetchMovies(1, filters)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Reiniciar cuando cambien los filtros
+  useEffect(() => {
+    setMovies([])
+    setCurrentPage(1)
+    loadedPages.current.clear()
+    fetchMovies(1, filters)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters])
 
   const observerTarget = useInfiniteScroll(() => {
     if (loading) return
@@ -54,9 +74,13 @@ export default function Movies() {
     const nextPage = currentPage + 1
     if (!loadedPages.current.has(nextPage)) {
       setCurrentPage(nextPage)
-      fetchMovies(nextPage)
+      fetchMovies(nextPage, filters)
     }
   }, { rootMargin: '200px' })
+
+  const handleFilterChange = useCallback((newFilters: FilterState) => {
+    setFilters(newFilters)
+  }, [setFilters])
 
   if (error && movies.length === 0) {
     return (
@@ -68,7 +92,7 @@ export default function Movies() {
             setMovies([])
             setError(null)
             loadedPages.current.clear()
-            fetchMovies(1)
+            fetchMovies(1, filters)
           }}
           className="px-6 py-2 rounded-lg transition-colors"
           style={{
@@ -88,9 +112,16 @@ export default function Movies() {
         <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: 'var(--fg)' }}>
           Películas Populares
         </h1>
-        <p className="text-lg" style={{ color: 'var(--fg-muted)' }}>
+        <p className="text-lg mb-6" style={{ color: 'var(--fg-muted)' }}>
           Explora nuestro catálogo completo de películas más populares
         </p>
+
+        {/* Filtros Avanzados */}
+        <AdvancedFilters 
+          onFilterChange={handleFilterChange} 
+          mediaType="movie" 
+          initialFilters={filters}
+        />
       </div>
 
       {error && movies.length > 0 && (
