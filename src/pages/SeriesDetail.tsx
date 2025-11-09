@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Heart, Share2, Calendar, Star, Play, Tv } from 'lucide-react'
+import { ArrowLeft, Heart, Share2, Calendar, Star, Play, Tv, List } from 'lucide-react'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import ErrorMessage from '@/components/common/ErrorMessage'
 import Rating from '@/components/common/Rating'
 import Recommendations from '@/components/common/Recommendations'
 import TrailerModal from '@/components/movies/TrailerModal'
+import { AddToListModal } from '@/components/common'
+import { ReviewsSection } from '@/components/reviews'
 import type { Series, Video } from '@/types'
-import { seriesService, authService } from '@/services'
+import { seriesService, authService, reviewsService } from '@/services'
 import { useMovies, useAuth } from '@/hooks'
 import { getImageUrl, formatDate, formatRating } from '@/utils/formatters'
+import { shareContent, getSeriesShareData } from '@/utils/share'
 
 export default function SeriesDetail() {
   const { id } = useParams<{ id: string }>()
@@ -20,6 +23,7 @@ export default function SeriesDetail() {
   const [selectedTrailer, setSelectedTrailer] = useState<Video | null>(null)
   const [showTrailerModal, setShowTrailerModal] = useState(false)
   const [userRating, setUserRating] = useState(0)
+  const [showAddToListModal, setShowAddToListModal] = useState(false)
   const { isFavorite, addFavorite, removeFavorite } = useMovies()
   const { isAuthenticated, sessionId } = useAuth()
 
@@ -38,6 +42,18 @@ export default function SeriesDetail() {
           (v: Video) => v.type === 'Trailer' && v.site === 'YouTube'
         )
         if (trailer) setSelectedTrailer(trailer)
+
+        // Cargar rating del usuario si está autenticado
+        if (isAuthenticated && sessionId) {
+          try {
+            const accountStates = await authService.getTVAccountStates(seriesId, sessionId)
+            if (accountStates.rated && typeof accountStates.rated.value === 'number') {
+              setUserRating(accountStates.rated.value)
+            }
+          } catch (err) {
+            console.error('Error al cargar rating del usuario:', err)
+          }
+        }
       } catch (err) {
         setError('Error al cargar los detalles de la serie')
         console.error(err)
@@ -47,7 +63,7 @@ export default function SeriesDetail() {
     }
 
     if (seriesId) fetchSeries()
-  }, [seriesId])
+  }, [seriesId, isAuthenticated, sessionId])
 
   const handleFavorite = () => {
     if (favorited) {
@@ -65,6 +81,20 @@ export default function SeriesDetail() {
       setUserRating(rating)
     } catch (err) {
       console.error('Error al valorar serie:', err)
+    }
+  }
+
+  const handleShare = async () => {
+    if (!series) return
+    
+    const shareData = getSeriesShareData(seriesId, series.name)
+    const result = await shareContent(shareData)
+    
+    if (result.success) {
+      console.log(`Compartido exitosamente vía ${result.method}`)
+    } else {
+      console.error('Error al compartir:', result.error)
+      alert(result.error || 'No se pudo compartir')
     }
   }
 
@@ -134,6 +164,7 @@ export default function SeriesDetail() {
               </button>
 
               <button 
+                onClick={handleShare}
                 className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold transition-colors"
                 style={{
                   backgroundColor: 'var(--surface-muted)',
@@ -144,6 +175,21 @@ export default function SeriesDetail() {
                 Compartir
               </button>
 
+              {/* Botón Añadir a Lista */}
+              {isAuthenticated && (
+                <button 
+                  onClick={() => setShowAddToListModal(true)}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold transition-colors"
+                  style={{
+                    backgroundColor: 'var(--surface-muted)',
+                    color: 'var(--fg)'
+                  }}
+                >
+                  <List size={20} />
+                  Añadir a lista
+                </button>
+              )}
+
               {/* Rating Component */}
               {isAuthenticated && (
                 <div className="pt-3">
@@ -153,7 +199,7 @@ export default function SeriesDetail() {
                   <Rating
                     initialRating={userRating}
                     onRate={handleRating}
-                    size="large"
+                    size="medium"
                     maxRating={10}
                   />
                 </div>
@@ -320,6 +366,13 @@ export default function SeriesDetail() {
               service={seriesService}
             />
           </div>
+
+          {/* Reseñas */}
+          <ReviewsSection
+            mediaId={seriesId}
+            mediaType="tv"
+            fetchReviews={reviewsService.getTVReviews}
+          />
         </div>
       </div>
 
@@ -328,6 +381,15 @@ export default function SeriesDetail() {
         video={selectedTrailer}
         isOpen={showTrailerModal}
         onClose={() => setShowTrailerModal(false)}
+      />
+
+      {/* Add to List Modal */}
+      <AddToListModal
+        isOpen={showAddToListModal}
+        onClose={() => setShowAddToListModal(false)}
+        mediaId={seriesId}
+        mediaType="tv"
+        mediaTitle={series.name}
       />
     </div>
   )
