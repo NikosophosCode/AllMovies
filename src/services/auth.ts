@@ -245,6 +245,16 @@ export const authService = {
   },
 
   /**
+   * Obtener estado de la cuenta para una película (incluye rating del usuario)
+   */
+  async getMovieAccountStates(movieId: number, sessionId: string) {
+    const { data } = await client.get(`/movie/${movieId}/account_states`, {
+      params: { session_id: sessionId },
+    })
+    return data
+  },
+
+  /**
    * Eliminar calificación de película
    */
   async deleteMovieRating(movieId: number, sessionId: string) {
@@ -267,6 +277,16 @@ export const authService = {
       { value: rating },
       { params: { session_id: sessionId } }
     )
+    return data
+  },
+
+  /**
+   * Obtener estado de la cuenta para una serie (incluye rating del usuario)
+   */
+  async getTVAccountStates(tvId: number, sessionId: string) {
+    const { data } = await client.get(`/tv/${tvId}/account_states`, {
+      params: { session_id: sessionId },
+    })
     return data
   },
 
