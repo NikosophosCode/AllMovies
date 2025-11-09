@@ -5,12 +5,32 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Explora películas y series con AllMovies. Información actualizada de TMDB, críticas, ratings y más." />
+    <meta name="keywords" content="películas, series, cine, tv, streaming, reviews, críticas, TMDB, AllMovies" />
+    <meta name="author" content="AllMovies" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://your-domain.com/" />
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="AllMovies - Explora Películas y Series" />
+    <meta property="og:description" content="Explora películas y series con AllMovies. Información actualizada de TMDB, críticas, ratings y más." />
+    <meta property="og:url" content="https://your-domain.com/" />
+    <meta property="og:site_name" content="AllMovies" />
+    <meta property="og:locale" content="es_ES" />
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="AllMovies - Explora Películas y Series" />
+    <meta name="twitter:description" content="Explora películas y series con AllMovies. Información actualizada de TMDB, críticas, ratings y más." />
+    
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#d32f2f" />
-    <meta name="description" content="Explora películas y series con AllMovies. Información actualizada de TMDB." />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="AllMovies" />
+    <meta name="mobile-web-app-capable" content="yes" />
     
     <!-- Manifest -->
     <link rel="manifest" href="/manifest.json" />
@@ -19,6 +39,14 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/icon-192.png" />
     
     <title>AllMovies - Explora Películas y Series</title>
+    
+    <!-- Preconnect to TMDB Image CDN -->
+    <link rel="preconnect" href="https://image.tmdb.org" crossorigin />
+    <link rel="dns-prefetch" href="https://image.tmdb.org" />
+    
+    <!-- Preconnect to TMDB API -->
+    <link rel="preconnect" href="https://api.themoviedb.org" crossorigin />
+    <link rel="dns-prefetch" href="https://api.themoviedb.org" />
     
     <script>
       // Apply saved theme before the app and styles load to avoid flashes
