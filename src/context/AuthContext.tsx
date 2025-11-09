@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useState, useCallback, useEffect } from 'react'
 import type { User } from '@/types'
 import { authService } from '@/services'
