@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Plus, Trash2, List, Film } from 'lucide-react'
 import { useAuth } from '@/hooks'
 import { authService } from '@/services'
@@ -8,6 +9,7 @@ import ErrorMessage from '@/components/common/ErrorMessage'
 import './MyLists.css'
 
 export default function MyLists() {
+  const navigate = useNavigate()
   const { user, sessionId } = useAuth()
   const [lists, setLists] = useState<UserList[]>([])
   const [loading, setLoading] = useState(true)
@@ -76,6 +78,10 @@ export default function MyLists() {
       console.error('Error deleting list:', err)
       alert('Error al eliminar la lista. Inténtalo de nuevo.')
     }
+  }
+
+  const handleNavigateToList = (listId: number) => {
+    navigate(`/my-lists/${listId}`)
   }
 
   if (!user || !sessionId) {
@@ -189,7 +195,12 @@ export default function MyLists() {
       ) : (
         <div className="my-lists-grid">
           {lists.map((list) => (
-            <div key={list.id} className="my-lists-card">
+            <div 
+              key={list.id} 
+              className="my-lists-card"
+              onClick={() => handleNavigateToList(list.id)}
+              style={{ cursor: 'pointer' }}
+            >
               {/* Poster de la lista */}
               {list.poster_path && (
                 <div className="my-lists-card-poster">
@@ -217,7 +228,10 @@ export default function MyLists() {
                   </span>
                   
                   <button
-                    onClick={() => handleDeleteList(list.id)}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleDeleteList(list.id)
+                    }}
                     className="my-lists-delete-btn"
                     title="Eliminar lista"
                   >
