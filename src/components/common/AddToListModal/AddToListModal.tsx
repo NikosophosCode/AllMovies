@@ -19,6 +19,10 @@ interface AddToListModalProps {
  * - Permite crear nueva lista inline
  * - Feedback visual de éxito/error
  * - Variables CSS para theming
+ * 
+ * IMPORTANTE: Verificar que mediaId y mediaType sean correctos
+ * - mediaId: ID del contenido (movie o serie)
+ * - mediaType: 'movie' o 'tv'
  */
 const AddToListModal = ({ isOpen, onClose, mediaId, mediaType, mediaTitle }: AddToListModalProps) => {
   const { user, sessionId } = useAuth()
@@ -33,6 +37,18 @@ const AddToListModal = ({ isOpen, onClose, mediaId, mediaType, mediaTitle }: Add
   const [newListName, setNewListName] = useState('')
   const [newListDescription, setNewListDescription] = useState('')
   const [creatingList, setCreatingList] = useState(false)
+
+  // Log de props recibidas al montar/actualizar
+  useEffect(() => {
+    if (isOpen) {
+      console.log('📋 AddToListModal - Props recibidas:', {
+        mediaId,
+        mediaType,
+        mediaTitle,
+        timestamp: new Date().toISOString()
+      })
+    }
+  }, [isOpen, mediaId, mediaType, mediaTitle])
 
   const loadLists = async () => {
     if (!user || !sessionId) return
@@ -60,10 +76,27 @@ const AddToListModal = ({ isOpen, onClose, mediaId, mediaType, mediaTitle }: Add
   const handleAddToList = async (listId: number) => {
     if (!sessionId || addingToList) return
 
+    // Log de depuración
+    console.log('🎬 Modal AddToList - Datos enviados:', {
+      listId,
+      sessionId: sessionId.substring(0, 10) + '...',
+      mediaId,
+      mediaType,
+      mediaTitle
+    })
+
+    // ADVERTENCIA: TMDB v3 API tiene limitaciones con series en listas personalizadas
+    if (mediaType === 'tv') {
+      console.warn('⚠️ ADVERTENCIA: TMDB v3 API tiene limitaciones conocidas con series en listas personalizadas.')
+      console.warn('Las series pueden no agregarse correctamente o pueden agregarse con el ID de una película.')
+    }
+
     try {
       setAddingToList(listId)
       setError(null)
-      await authService.addToList(listId, sessionId, mediaId, mediaType)
+      const result = await authService.addToList(listId, sessionId, mediaId, mediaType)
+      
+      console.log('✅ Respuesta de la API:', result)
       
       // Mostrar feedback de éxito
       setSuccessList(listId)
@@ -71,7 +104,7 @@ const AddToListModal = ({ isOpen, onClose, mediaId, mediaType, mediaTitle }: Add
         setSuccessList(null)
       }, 2000)
     } catch (err) {
-      console.error('Error al añadir a lista:', err)
+      console.error('❌ Error al añadir a lista:', err)
       setError('No se pudo añadir a la lista')
     } finally {
       setAddingToList(null)
@@ -94,6 +127,12 @@ const AddToListModal = ({ isOpen, onClose, mediaId, mediaType, mediaTitle }: Add
       
       // Añadir película o serie a la nueva lista
       if (response.list_id) {
+        console.log('🎬 Modal CreateList - Añadiendo media a nueva lista:', {
+          listId: response.list_id,
+          mediaId,
+          mediaType,
+          mediaTitle
+        })
         await authService.addToList(response.list_id, sessionId, mediaId, mediaType)
       }
       
@@ -147,6 +186,23 @@ const AddToListModal = ({ isOpen, onClose, mediaId, mediaType, mediaTitle }: Add
 
         {/* Content */}
         <div className="add-to-list-content">
+          {/* Advertencia para series */}
+          {mediaType === 'tv' && (
+            <div className="add-to-list-warning" style={{
+              padding: '12px',
+              marginBottom: '16px',
+              borderRadius: '8px',
+              backgroundColor: 'rgba(255, 193, 7, 0.1)',
+              border: '1px solid rgba(255, 193, 7, 0.3)',
+              color: 'var(--fg)',
+              fontSize: '14px',
+              lineHeight: '1.5'
+            }}>
+              <strong>⚠️ Nota:</strong> Las listas personalizadas de TMDB tienen limitaciones con series. 
+              Te recomendamos usar la función "Favoritos" o "Watchlist" para organizar tus series.
+            </div>
+          )}
+
           {/* Error message */}
           {error && (
             <div className="add-to-list-error">

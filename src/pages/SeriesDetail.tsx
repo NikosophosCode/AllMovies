@@ -191,7 +191,14 @@ export default function SeriesDetail() {
               {/* Botón Añadir a Lista */}
               {isAuthenticated && (
                 <button 
-                  onClick={() => setShowAddToListModal(true)}
+                  onClick={() => {
+                    console.log('🎬 SeriesDetail - Abriendo modal AddToList:', {
+                      seriesId,
+                      seriesName: series.name,
+                      mediaType: 'tv'
+                    })
+                    setShowAddToListModal(true)
+                  }}
                   className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold transition-colors"
                   style={{
                     backgroundColor: 'var(--surface-muted)',
@@ -405,7 +412,10 @@ export default function SeriesDetail() {
       {/* Add to List Modal */}
       <AddToListModal
         isOpen={showAddToListModal}
-        onClose={() => setShowAddToListModal(false)}
+        onClose={() => {
+          console.log('🔍 SeriesDetail - Cerrando modal AddToList')
+          setShowAddToListModal(false)
+        }}
         mediaId={seriesId}
         mediaType="tv"
         mediaTitle={series.name}
