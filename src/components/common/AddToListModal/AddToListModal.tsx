@@ -20,7 +20,7 @@ interface AddToListModalProps {
  * - Feedback visual de éxito/error
  * - Variables CSS para theming
  */
-const AddToListModal = ({ isOpen, onClose, mediaId, mediaTitle }: AddToListModalProps) => {
+const AddToListModal = ({ isOpen, onClose, mediaId, mediaType, mediaTitle }: AddToListModalProps) => {
   const { user, sessionId } = useAuth()
   const [lists, setLists] = useState<UserList[]>([])
   const [loading, setLoading] = useState(true)
@@ -33,12 +33,6 @@ const AddToListModal = ({ isOpen, onClose, mediaId, mediaTitle }: AddToListModal
   const [newListName, setNewListName] = useState('')
   const [newListDescription, setNewListDescription] = useState('')
   const [creatingList, setCreatingList] = useState(false)
-
-  useEffect(() => {
-    if (isOpen && user && sessionId) {
-      loadLists()
-    }
-  }, [isOpen, user, sessionId])
 
   const loadLists = async () => {
     if (!user || !sessionId) return
@@ -55,6 +49,13 @@ const AddToListModal = ({ isOpen, onClose, mediaId, mediaTitle }: AddToListModal
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (isOpen && user && sessionId) {
+      loadLists()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, user, sessionId])
 
   const handleAddToList = async (listId: number) => {
     if (!sessionId || addingToList) return
