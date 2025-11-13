@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react'
 import MovieCarousel from '@/components/movies/MovieCarousel'
+import { HeroSlider } from '@/components/movies/HeroSlider'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import SearchBar from '@/components/search/SearchBar'
 import type { Movie } from '@/types'
 import { movieService } from '@/services'
-import HeroSection from '@/components/common/HeroSection'
 import { usePrefetch, useMetaTags } from '@/hooks'
 
 const Home = () => {
   const [comingSoonMovies, setComingSoonMovies] = useState<Movie[]>([])
   const [trendingMovies, setTrendingMovies] = useState<Movie[]>([])
+  const [heroMovies, setHeroMovies] = useState<Movie[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const { prefetchPopularMovies, prefetchUpcoming } = usePrefetch()
@@ -27,12 +28,49 @@ const Home = () => {
     const fetchData = async () => {
       try {
         setLoading(true)
-        const [upcoming, trending] = await Promise.all([
+        const [upcoming, trending, popular, nowPlaying, topRated] = await Promise.all([
           movieService.getUpcoming(),
-          movieService.getTrending()
+          movieService.getTrending(),
+          movieService.getPopular(),
+          movieService.getNowPlaying(),
+          movieService.getTopRated()
         ])
         setComingSoonMovies(upcoming.results.slice(0, 12))
-        setTrendingMovies(trending.results.slice(0, 12))
+        setTrendingMovies(trending.results.slice(0, 20)) // Aumentado de 12 a 20
+        
+        // Obtener películas más variadas para el hero slider
+        // Combinamos trending, popular, nowPlaying y topRated para mayor variedad
+        const allHeroMovies = [
+          ...trending.results,
+          ...popular.results,
+          ...nowPlaying.results,
+          ...topRated.results
+        ]
+          .filter((movie, index, self) => 
+            // Eliminar duplicados por ID
+            index === self.findIndex(m => m.id === movie.id)
+          )
+          .filter(movie => 
+            // Filtrar películas con buenas imágenes y rating
+            movie.backdrop_path && 
+            movie.vote_average >= 6.5 && // Bajado de 7 a 6.5 para más variedad
+            movie.overview &&
+            movie.popularity > 50 // Añadido filtro de popularidad
+          )
+          // Ordenar por una combinación de rating y popularidad para variedad
+          .sort((a, b) => {
+            const scoreA = (a.vote_average * 0.6) + (Math.log10(a.popularity) * 0.4)
+            const scoreB = (b.vote_average * 0.6) + (Math.log10(b.popularity) * 0.4)
+            return scoreB - scoreA
+          })
+          .slice(0, 10) // Tomar 10 en lugar de 6 para más rotación
+        
+        // Obtener detalles completos para las películas del hero
+        const heroDetailsPromises = allHeroMovies.map(movie => 
+          movieService.getDetails(movie.id)
+        )
+        const heroDetails = await Promise.all(heroDetailsPromises)
+        setHeroMovies(heroDetails)
 
         // Prefetch de datos adicionales para mejorar la navegación
         prefetchPopularMovies()
@@ -53,20 +91,13 @@ const Home = () => {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--bg)' }}>
-      {/* Hero Section optimizado - Sin Parallax para mejor CLS */}
-      <HeroSection>
-        <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="glass-morphism rounded-2xl p-4 md:p-10">
-            <span className="inline-block text-red-600 font-semibold tracking-wider uppercase text-xs mb-3">Discover</span>
-            <p className="text-lg animate-slide-in-up" style={{ color: 'var(--fg-muted)' }}>
-              Explore coming soon and trending titles with a clean, fast experience.
-            </p>
-          </div>
-        </div>
-      </HeroSection>
+      {/* Hero Slider - Featured Movies */}
+      {heroMovies.length > 0 && (
+        <HeroSlider movies={heroMovies} autoPlayInterval={5000} />
+      )}
 
       {/* Search Bar Section */}
-      <section className=" max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-8 max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
           <SearchBar placeholder="Busca películas, series, personas..." />
         </div>
