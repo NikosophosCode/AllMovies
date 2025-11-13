@@ -128,9 +128,9 @@ export default function MovieDetail() {
         Volver atrás
       </button>
 
-      {/* Backdrop */}
+      {/* Backdrop - Solo visible en desktop */}
       <div
-        className="relative w-full h-96 rounded-lg overflow-hidden mb-8 bg-cover bg-center"
+        className="hidden lg:block relative w-full h-48 lg:h-96 overflow-hidden mb-8 bg-cover bg-center"
         style={{ backgroundImage: `url(${backdropUrl})` }}
       >
         <div className="absolute inset-0 bg-black/40" />
@@ -151,7 +151,7 @@ export default function MovieDetail() {
       </div>
 
       {/* Contenido principal */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8 p-3">
         {/* Poster y acciones */}
         <div className="md:col-span-1">
           <div className="sticky top-24">
@@ -202,6 +202,23 @@ export default function MovieDetail() {
                   <List size={20} />
                   Añadir a lista
                 </button>
+              )}
+
+              {/* Trailer Mobile - Solo visible en móviles */}
+              {selectedTrailer && (
+                <div className="lg:hidden">
+                  <button 
+                    onClick={() => setShowTrailerModal(true)}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold transition-colors"
+                    style={{
+                      backgroundColor: 'var(--accent)',
+                      color: 'white'
+                    }}
+                  >
+                    <Play size={20} fill="currentColor" />
+                    Ver tráiler
+                  </button>
+                </div>
               )}
 
               {/* Rating Component */}
