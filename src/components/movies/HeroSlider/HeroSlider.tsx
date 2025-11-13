@@ -104,7 +104,7 @@ const HeroSlider = ({ movies, autoPlayInterval = 5000 }: HeroSliderProps) => {
   return (
     <div
       ref={sliderRef}
-      className="relative w-full h-[70vh] min-h-[500px] max-h-[800px] overflow-hidden bg-black"
+      className="relative w-full h-[90vh] min-h-[500px] max-h-[800px] overflow-hidden bg-black"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onTouchStart={handleTouchStart}
