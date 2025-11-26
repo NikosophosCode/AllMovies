@@ -719,7 +719,7 @@ Este proyecto es de código abierto y está disponible bajo la [MIT License](LIC
 
 ## 👨‍💻 Autor
 
-**Nicolas Quiceno**
+**Nicolas Acuña (nikosophoscode)**
 - GitHub: [@NikosophosCode](https://github.com/NikosophosCode)
 - Proyecto: [AllMovies](https://github.com/NikosophosCode/AllMovies)
 
